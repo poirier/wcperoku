@@ -4,9 +4,16 @@
       <Label id="myLabel" 
       	text="The Classical Station"
       	width="1280" 
-      	height="720" 
+      	height="720"
       	horizAlign="center"
       	vertAlign="center"
+      	/>
+      <Label id="myLabel"
+      	text="https://theclassicalstation.org"
+      	width="1280"
+      	height="720"
+      	horizAlign="center"
+      	vertAlign="bottom"
       	/>
     </children>
 <!-- BrightScript Portion -->
@@ -38,7 +45,24 @@
     m.top.appendChild(audio)
     audio.control = "play"
     m.top.setFocus(true)
+
+    m.audio = audio
   end function
+
+  function onKeyEvent(key as String, press as Boolean) as Boolean
+  handled = false
+  if press then
+    if (key = "play") then
+      if (m.audio.state = "playing") then
+        m.audio.control = "stop"
+      else
+        m.audio.control = "play"
+      end if
+      handled = true
+    end if
+  end if
+  return handled
+end function
 ]]>
 </script>
 <!-- End of BrightScript Portion -->
