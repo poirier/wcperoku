@@ -30,6 +30,14 @@
     '** The full list of editable attributes can be located at:
     '** http://sdkdocs.roku.com/display/sdkdoc/Label#Label-Fields
     '**
+
+    audio = createObject("roSGNode", "Audio")
+    audiocontent = createObject("RoSGNode", "ContentNode")
+    audiocontent.url = "http://playerservices.streamtheworld.com/api/livestream-redirect/WCPE_FM_ADP.aac"
+    audio.content = audiocontent
+    m.top.appendChild(audio)
+    audio.control = "play"
+    m.top.setFocus(true)
   end function
 ]]>
 </script>

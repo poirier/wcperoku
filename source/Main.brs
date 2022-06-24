@@ -5,7 +5,7 @@ sub Main()
     m.port = CreateObject("roMessagePort")
     screen.setMessagePort(m.port)
 
-    'Create a scene and load /components/helloworld.xml'
+    'Create a scene and load /components/theclassicalstation.xml'
     scene = screen.CreateScene("TheClassicalStation")
     screen.show()
 
@@ -17,3 +17,6 @@ sub Main()
         end if
     end while
 end sub
+
+' https://developer.roku.com/docs/references/scenegraph/media-playback-nodes/audio.md
+' https://github.com/rokudev/samples/tree/master/media/AudioExample
