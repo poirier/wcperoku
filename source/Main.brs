@@ -1,22 +1,17 @@
-sub Main()
-    print "in showChannelSGScreen"
-    'Indicate this is a Roku SceneGraph application'
+function Main() as Void
+    port = CreateObject("roMessagePort")
     screen = CreateObject("roSGScreen")
-    m.port = CreateObject("roMessagePort")
-    screen.setMessagePort(m.port)
-
-    'Create a scene and load /components/theclassicalstation.xml'
+    screen.setMessagePort(port)
     scene = screen.CreateScene("TheClassicalStation")
     screen.show()
 
     while(true)
-        msg = wait(0, m.port)
+        msg = wait(0, port)
         msgType = type(msg)
-        if msgType = "roSGScreenEvent"
+        if msgType = "roSGScreenEvent" then
             if msg.isScreenClosed() then return
+        else
+            print "Unhandled event type=";msgType
         end if
     end while
-end sub
-
-' https://developer.roku.com/docs/references/scenegraph/media-playback-nodes/audio.md
-' https://github.com/rokudev/samples/tree/master/media/AudioExample
+end function

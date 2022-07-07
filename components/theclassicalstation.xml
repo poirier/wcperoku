@@ -1,42 +1,125 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <component name="TheClassicalStation" extends="Scene">
     <children>
-        <Poster
-                id="wcpePoster"
-                uri="pkg:/images/theclassicalstation_svg_1920x1080.png"
-                loadDisplayMode="scaleToFit"
+        <!-- Put the station banner image in the top right -->
+        <Poster id="wcpePoster" loadDisplayMode="scaleToFit" height="405" width="540"
+                translation="[1300,50]" uri="pkg:/images/theclassicalstation_svg_540x405.png"/>
+
+        <!-- By default, the time display is the same color as the background, so it's not visible. -->
+        <!-- We'll change the color during initialization if the app was sideloaded, for debugging. -->
+        <SimpleLabel id="timeLabel" text = "" horizOrigin = "left" vertOrigin = "top" translation="[100,50]" color="0x063350ff"/>
+
+        <!-- This is the nicely formatted display of what's played, playing, and to play next. -->
+        <MultiStyleLabel
+                id="whatsPlayingLabel"
+                text="default text"
+                width="2160"
+                wrap="true"
+                translation="[100, 100]"
         />
     </children>
-<!-- BrightScript Portion -->
 <script type="text/brightscript" >
 <![CDATA[
-'**
-'** Example: Edit a Label size and color with BrightScript
-'**
+function init() as Void
+    self = m.top
 
-function init()
-    m.top.setFocus(true)
+    self.backgroundUri = ""  ' MUST set backgroundUri to "" explicitly, or background color does not take effect. !#@!$@#!$@
+    self.backgroundColor = "0x063350ff"
 
-    ' https://developer.roku.com/docs/references/scenegraph/control-nodes/contentnode.md
-    ' https://developer.roku.com/docs/references/scenegraph/media-playback-nodes/audio.md
+    m.backgroundTask = CreateObject("roSGNode", "BackgroundTask")
+    m.backgroundTask.ObserveField("labels", "onLabelsChanged")
+    self.appendChild(m.backgroundTask)
+
+    self.setFocus(true)
+
     audio = createObject("roSGNode", "Audio")
     audiocontent = createObject("RoSGNode", "ContentNode")
-    audiocontent.url = "http://playerservices.streamtheworld.com/api/livestream-redirect/WCPE_FM_ADP.aac"
-    audio.content = audiocontent
-    m.top.appendChild(audio)
-    audio.control = "play"
-    m.top.setFocus(true)
+    audiocontent.Url = "http://playerservices.streamtheworld.com/api/livestream-redirect/WCPE_FM_ADP.aac"
+    audiocontent.Title = "The Classical Station"
+    audiocontent.TextOverlayUL = "Upper left"
+    audiocontent.IgnoreStreamErrors = true
 
+    audio.content = audiocontent
+    audio.loop = true
+    self.appendChild(audio)
     m.audio = audio
+    m.stopped_manually = false
+    m.audio.observeField("state", "onAudioStateChange")
+    ' Start playing immediately when we're loaded
+    m.audio.control = "play"
+
+    if CreateObject("roAppInfo").IsDev() then
+        ' We've been sideloaded, so this is a developer testing this.
+        ' Change the color of the time display to make it visible, so we
+        ' can easily see what time it is and tell if the background task
+        ' is updating things.
+        self.FindNode("timeLabel").color = "0xffffffcf"
+    end if
+
+    self.FindNode("whatsPlayingLabel").drawingStyles = {
+        "heading": {
+            "color": "#76A2B7FF"
+            "fontSize": 48
+            "fontUri": "font:LargeSystemFont"
+        }
+        "title": {
+            "fontUri": "pkg:/fonts/SourceSerifPro-Regular.ttf"
+            "fontSize": 48
+            "color": "#FFFFFFFF"
+        }
+        "performers":{
+            "fontUri": "pkg:/fonts/SourceSerifPro-Italic.ttf"
+            "fontSize": 36
+            "color": "#FFFFFFFF"
+        }
+        "composer": {
+            "fontUri": "pkg:/fonts/SourceSerifPro-Regular.ttf"
+            "fontSize": 48
+            "color": "#FFFFFFFF"
+        }
+        "default": {
+            "fontSize": 36
+            "fontUri": "font:LargeSystemFont"
+            "color": "#000000FF"
+        }
+    }
+
+    m.backgroundtask.control = "RUN"
 end function
+
+sub onLabelsChanged()
+    ' Get the labels field from the background task. The value
+    ' is an associative array, where each key is the name of a label
+    ' and its value is the text to set that label to.
+    labels = m.backgroundTask.labels
+    labels.Reset()
+    name = labels.Next()
+    while name <> invalid
+        m.top.findNode(name).text = labels[name]
+        name = labels.Next()
+    end while
+end sub
+
+sub onAudioStateChange()
+    if (m.audio.state = "error") then
+        print "Audio error: ";m.audio.errorMsg
+    end if
+    if (m.audio.state <> "buffering" and m.audio.state <> "playing" and m.stopped_manually <> true) then
+        ' It stopped for some reason other than the user hitting "PLAY".
+        ' Try to start it again.
+        m.audio.control = "play"
+    end if
+end sub
 
 function onKeyEvent(key as String, press as Boolean) as Boolean
     handled = false
     if press then
         if (key = "play") then
             if (m.audio.state = "playing") then
+                m.stopped_manually = true
                 m.audio.control = "stop"
             else
+                m.stopped_manually = false
                 m.audio.control = "play"
             end if
             handled = true

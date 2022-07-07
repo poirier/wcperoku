@@ -1,0 +1,7 @@
+To declare a data object at global scope, store it in a field or child of the global node. This global node may be accessed from the entire SceneGraph application.
+
+To access the global node in components, use the predefined m.global, much like m.top.
+
+For access to the global node from non-component script as in source/main.brs, use getGlobalNode() called on the roSGScreen object.
+
+In non-component script, where the global node is obtained using getGlobalNode(), you can store it in m.global so that the syntax for subsequent references to it matches that for components.
