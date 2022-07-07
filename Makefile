@@ -5,7 +5,7 @@
 
 APPNAME = the-classical-station
 IMPORTS =
-ZIP_EXCLUDE = --quiet -x .git/\* .idea/\* .envrc dist/\* oldimages/\* app.mk .gitignore Makefile
+ZIP_EXCLUDE = --quiet -x .git/\* .idea/\* .envrc dist/\* oldimages/\* app.mk .gitignore Makefile README.md
 include app.mk
 
 debug:

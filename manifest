@@ -3,19 +3,19 @@
 title=The Classical Station WCPE
 major_version=1
 minor_version=6
-build_version=00015
+build_version=00016
 
 ##   Channel Assets
 ###  Main Menu Icons / Channel Poster Artwork 
 #### Image sizes are FHD: 540x405px | HD: 290x218px | SD: 246x140px
 mm_icon_focus_fhd=pkg:/images/theclassicalstation_svg_540x405.png
-mm_icon_focus_hd=pkg:/images/theclassicalstation_svg_540x405.png
-mm_icon_focus_sd=pkg:/images/theclassicalstation_svg_540x405.png
+mm_icon_focus_hd=pkg:/images/290x218_from_svg.png
+mm_icon_focus_sd=pkg:/images/246x140_from_svg.png
 
 ###  Splash Screen + Loading Screen Artwork 
 #### Image sizes are FHD: 1920x1080px | HD: 1280x720px | SD: 720x480px
 splash_screen_fhd=pkg:/images/theclassicalstation_svg_1920x1080.png
-splash_screen_hd=pkg:/images/theclassicalstation_svg_1920x1080.png
-splash_screen_sd=pkg:/images/theclassicalstation_svg_1920x1080.png
+splash_screen_hd=pkg:/images/1280x720_from_svg.png
+splash_screen_sd=pkg:/images/720x480_from_svg.png
 splash_min_time=0
 ui_resolutions=sd,hd,fhd
