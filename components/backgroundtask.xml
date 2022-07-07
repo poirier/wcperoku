@@ -15,9 +15,9 @@ end sub
 function formatWork(heading, work)
     mstext = ""
     mstext = mstext + "<heading>" + heading + "</heading>" + Chr(10)
-    mstext = mstext + "<title>" + work.title + "</title>" + Chr(10)
-    mstext = mstext + "<performers>" + work.performers + "</performers>" + Chr(10)
-    mstext = mstext + "<composer>" + work.composer + "</composer>" + Chr(10)
+    if work.title <> invalid then mstext = mstext + "<title>" + work.title + "</title>" + Chr(10)
+    if work.performers <> invalid then mstext = mstext + "<performers>" + work.performers + "</performers>" + Chr(10)
+    if work.composer <> invalid then mstext = mstext + "<composer>" + work.composer + "</composer>" + Chr(10)
     return mstext
 end function
 
