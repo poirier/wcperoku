@@ -2,8 +2,8 @@
 <component name="TheClassicalStation" extends="Scene">
     <children>
         <!-- Put the station banner image in the top right -->
-        <Poster id="wcpePoster" loadDisplayMode="scaleToFit" height="405" width="540"
-                translation="[1300,50]" uri="pkg:/images/theclassicalstation_svg_540x405.png"/>
+        <Poster id="wcpePoster" loadDisplayMode="scaleToFit" height="380" width="500"
+                translation="[1350,50]" uri="pkg:/images/theclassicalstation_svg_540x405.png"/>
 
         <!-- By default, the time display is the same color as the background, so it's not visible. -->
         <!-- We'll change the color during initialization if the app was sideloaded, for debugging. -->
