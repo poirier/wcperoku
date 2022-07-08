@@ -27,6 +27,8 @@ sub updateScreenLoop()
     slots = CreateObject("roArray", 0, true)
     previous = invalid
     while true
+        called_get_new_slots = false
+
         labels = {"timeLabel": mid(getNow().ToISOString(), 12, 8)}
 
         ' Skip past completed works, leaving slots[0] as the current work.
@@ -40,16 +42,13 @@ sub updateScreenLoop()
             result = GetNewSlots()
             slots = result.slots
             previous = result.previous
-            if slots = invalid
-                print "ERROR - slots invalid - bailing"
-                return
-            end if
+            called_get_new_slots = true
         end if
 
-        mstext = ""
         if slots.Count() = 0 then
-            labels["whatsPlayingLabel"] = "Sorry no information"
+            labels["whatsPlayingLabel"] = "<message>Sorry, no information available.</message>"
         else
+            mstext = ""
             if previous <> invalid then
                 mstext = formatWork("JUST PLAYED", previous) + Chr(10)
             endif
@@ -63,13 +62,25 @@ sub updateScreenLoop()
             labels["whatsPlayingLabel"] = mstext
         end if
         self.labels = labels
-        sleep(1000)
+
+        if called_get_new_slots and slots.Count() = 0 then
+            ' We tried to get more data and failed somehow. Rather than
+            ' hammering the server retrying every second, pause for a longer
+            ' time before our next update.
+            sleep(60 * 1000)
+        else
+            ' update the screen every second
+            sleep(1000)
+        end if
     end while
 end sub
 
 function GetNewSlots() as dynamic
+    ' Returns {"previous": invalid | Slot, "slots": Array of Slots}
+    ' array of slots might be 0-length, e.g. on errors
     print "GetNewSlots..."
     previous = invalid
+    slots = CreateObject("roArray", 0, true)
 
     transfer = createObject("roUrlTransfer")
     transfer.setUrl("https://theclassicalstation.org/mobile/WCPE_Playlist.XML")
@@ -79,10 +90,9 @@ function GetNewSlots() as dynamic
     xml = CreateObject("roXMLElement")
     if not xml.Parse(body) then
         print "PARSER ERROR!!!!!!!!!!!!!!!!!!"
-        return {"previous": invalid, "slots": invalid}
+        return {"previous": invalid, "slots": slots}
     end if
     items = xml.GetNamedElements("Item") ' roXMLList
-    slots = CreateObject("roArray", 0, true)
     for each item in items
         slot = NewSlot()
         slot["composer"] = GetTextFromItem(item, "composer")

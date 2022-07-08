@@ -53,7 +53,7 @@ function init() as Void
         ' Change the color of the time display to make it visible, so we
         ' can easily see what time it is and tell if the background task
         ' is updating things.
-        self.FindNode("timeLabel").color = "0xffffffcf"
+        'self.FindNode("timeLabel").color = "0xffffffcf"
     end if
 
     self.FindNode("whatsPlayingLabel").drawingStyles = {
@@ -76,6 +76,11 @@ function init() as Void
             "fontUri": "pkg:/fonts/SourceSerifPro-Regular.ttf"
             "fontSize": 48
             "color": "#FFFFFFFF"
+        }
+        "message": {
+            "fontSize": 36
+            "fontUri": "font:LargeSystemFont"
+            "color":  "#FFFFFFFF"
         }
         "default": {
             "fontSize": 36
