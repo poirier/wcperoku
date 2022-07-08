@@ -2,7 +2,7 @@
 <component name="TheClassicalStation" extends="Scene">
     <children>
         <!-- Put the station banner image in the top right -->
-        <Poster id="wcpePoster" loadDisplayMode="scaleToFit" height="380" width="500"
+        <Poster id="wcpePoster" loadDisplayMode="scaleToFit" width="500" height="380"
                 translation="[1350,50]" uri="pkg:/images/theclassicalstation_svg_540x405.png"/>
 
         <!-- By default, the time display is the same color as the background, so it's not visible. -->
@@ -18,79 +18,48 @@
                 translation="[100, 100]"
         />
     </children>
+    <interface>
+        <field id="portarray" type="array" alwaysNotify="true"/>
+    </interface>
 <script type="text/brightscript" >
 <![CDATA[
 function init() as Void
-    self = m.top
+    self = m.top  ' <Component: roSGNode:TheClassicalStation>
+    ' https://developer.roku.com/docs/references/brightscript/components/rosgnode.md
 
-    self.backgroundUri = ""  ' MUST set backgroundUri to "" explicitly, or background color does not take effect. !#@!$@#!$@
-    self.backgroundColor = "0x063350ff"
+    ' m: <Component: roAssociativeArray>
+    ' m.global: <Component: roSGNode:Node>
 
-    m.backgroundTask = CreateObject("roSGNode", "BackgroundTask")
-    m.backgroundTask.ObserveField("labels", "onLabelsChanged")
-    self.appendChild(m.backgroundTask)
+    scaleAndPositionPoster(self.findNode("wcpePoster"))
+
+    self.SetFields({
+        backgroundUri: ""  ' MUST set backgroundUri to "" explicitly, or background color does not take effect. !#@!$@#!$@
+        backgroundColor: "0x063350ff"
+    })
 
     self.setFocus(true)
 
-    audio = createObject("roSGNode", "Audio")
-    audiocontent = createObject("RoSGNode", "ContentNode")
-    audiocontent.Url = "http://playerservices.streamtheworld.com/api/livestream-redirect/WCPE_FM_ADP.aac"
-    audiocontent.Title = "The Classical Station"
-    audiocontent.TextOverlayUL = "Upper left"
-    audiocontent.IgnoreStreamErrors = true
+    m.audio = setupAudioNode(self)
+    m.backgroundTask = setupBackgroundTask(self)
 
-    audio.content = audiocontent
-    audio.loop = true
-    self.appendChild(audio)
-    m.audio = audio
     m.stopped_manually = false
-    m.audio.observeField("state", "onAudioStateChange")
-    ' Start playing immediately when we're loaded
-    m.audio.control = "play"
+    self.ObserveField("portarray", "onPortArrayChange")
 
     if CreateObject("roAppInfo").IsDev() then
         ' We've been sideloaded, so this is a developer testing this.
         ' Change the color of the time display to make it visible, so we
         ' can easily see what time it is and tell if the background task
         ' is updating things.
-        'self.FindNode("timeLabel").color = "0xffffffcf"
+        self.FindNode("timeLabel").color = "0xffffffcf"
     end if
 
-    self.FindNode("whatsPlayingLabel").drawingStyles = {
-        "heading": {
-            "color": "#76A2B7FF"
-            "fontSize": 48
-            "fontUri": "font:LargeSystemFont"
-        }
-        "title": {
-            "fontUri": "pkg:/fonts/SourceSerifPro-Regular.ttf"
-            "fontSize": 48
-            "color": "#FFFFFFFF"
-        }
-        "performers":{
-            "fontUri": "pkg:/fonts/SourceSerifPro-Italic.ttf"
-            "fontSize": 36
-            "color": "#FFFFFFFF"
-        }
-        "composer": {
-            "fontUri": "pkg:/fonts/SourceSerifPro-Regular.ttf"
-            "fontSize": 48
-            "color": "#FFFFFFFF"
-        }
-        "message": {
-            "fontSize": 36
-            "fontUri": "font:LargeSystemFont"
-            "color":  "#FFFFFFFF"
-        }
-        "default": {
-            "fontSize": 36
-            "fontUri": "font:LargeSystemFont"
-            "color": "#000000FF"
-        }
-    }
-
-    m.backgroundtask.control = "RUN"
+    setDrawingStyles(self.FindNode("whatsPlayingLabel"))
 end function
+
+sub onPortArrayChange()
+    print "port array change"
+    m.audio.observeField("state", m.top.portarray[0])
+end sub
 
 sub onLabelsChanged()
     ' Get the labels field from the background task. The value
@@ -106,6 +75,7 @@ sub onLabelsChanged()
 end sub
 
 sub onAudioStateChange()
+    print "audio state change to ";m.audio.state
     if (m.audio.state = "error") then
         print "Audio error: ";m.audio.errorMsg
     end if
@@ -131,6 +101,95 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
         end if
     end if
     return handled
+end function
+
+function setupAudioNode(self) as Dynamic
+
+    audio = createObject("roSGNode", "Audio")
+    audiocontent = createObject("RoSGNode", "ContentNode")
+    audiocontent.Url = "http://playerservices.streamtheworld.com/api/livestream-redirect/WCPE_FM_ADP.aac"
+    audiocontent.Title = "The Classical Station"
+    audiocontent.TextOverlayUL = "Upper left"
+    audiocontent.IgnoreStreamErrors = true
+
+    audio.content = audiocontent
+    audio.loop = true
+
+    audio.observeField("state", "onAudioStateChange")
+    self.appendChild(audio)
+    audio.control = "play"
+    return audio
+end function
+
+sub setDrawingStyles(node)
+    devInfo = CreateObject("roDeviceInfo")
+    resolution = devInfo.GetUIResolution()["name"]  ' "SD", "HD", "FHD"
+
+    bigfontsize = {"SD": "20", "HD": 30, "FHD": 48}[resolution]
+    medfontsize = {"SD": "16", "HD": 20, "FHD": 36}[resolution]
+
+    node.drawingStyles = {
+        "heading": {
+            "color": "#76A2B7FF"
+            "fontSize": bigfontsize
+            "fontUri": "font:LargeSystemFont"
+        }
+        "title": {
+            "fontUri": "pkg:/fonts/SourceSerifPro-Regular.ttf"
+            "fontSize": bigfontsize
+            "color": "#FFFFFFFF"
+        }
+        "performers":{
+            "fontUri": "pkg:/fonts/SourceSerifPro-Italic.ttf"
+            "fontSize": medfontsize
+            "color": "#FFFFFFFF"
+        }
+        "composer": {
+            "fontUri": "pkg:/fonts/SourceSerifPro-Regular.ttf"
+            "fontSize": bigfontsize
+            "color": "#FFFFFFFF"
+        }
+        "message": {
+            "fontSize": medfontsize
+            "fontUri": "font:LargeSystemFont"
+            "color":  "#FFFFFFFF"
+        }
+        "default": {
+            "fontSize": medfontsize
+            "fontUri": "font:LargeSystemFont"
+            "color": "#000000FF"
+        }
+    }
+end sub
+
+sub scaleAndPositionPoster(poster)
+    devInfo = CreateObject("roDeviceInfo")
+    uires = devInfo.GetUIResolution()
+    resolution = uires["name"]  ' "SD", "HD", "FHD"
+    screen_width = uires["width"]
+    screen_height = uires["height"]
+
+    margin_w = screen_width / 32
+    margin_h = screen_height / 16
+
+    poster_w = screen_width / 4 ' e.g. 320
+    poster_x = screen_width - poster_w - margin_w
+    poster_y = margin_h
+    poster_fields = {
+        translation: "[" + poster_x.ToStr() + "," + poster_y.ToStr() + "]"
+        width: poster_w
+        height: screen_height / 4 ' e.g. 270
+    }
+    poster.SetFields(poster_fields)
+end sub
+
+function setupBackgroundTask(self) as dynamic
+    backgroundTask = CreateObject("roSGNode", "BackgroundTask")
+    ' <Component: roSGNode:BackgroundTask>
+    backgroundTask.ObserveField("labels", "onLabelsChanged")
+    self.appendChild(backgroundTask)
+    backgroundtask.control = "RUN"
+    return backgroundTask
 end function
 ]]>
 </script>
