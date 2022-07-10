@@ -16,7 +16,7 @@
         <!-- This is the nicely formatted display of what's played, playing, and to play next. -->
         <MultiStyleLabel
                 id="whatsPlayingLabel"
-                text="default text"
+                text=""
                 width="2160"
                 wrap="true"
                 translation="[100, 100]"/>

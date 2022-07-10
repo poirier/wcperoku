@@ -2,8 +2,8 @@
 ##   Channel Details
 title=The Classical Station WCPE
 major_version=1
-minor_version=11
-build_version=00021
+minor_version=12
+build_version=00023
 
 ##   Channel Assets
 ###  Main Menu Icons / Channel Poster Artwork 
@@ -20,4 +20,4 @@ splash_screen_sd=pkg:/images/720x480_from_svg.png
 splash_min_time=0
 ui_resolutions=sd,hd,fhd
 
-bs_const=runTests=false
+bs_const=runTests=true

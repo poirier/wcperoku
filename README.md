@@ -1,7 +1,12 @@
 # The Classical Station Roku Channel
 
-This is a minimal roku channel to listen to
+This is a minimal Roku channel to listen to
 https://theclassicalstation.org.
+
+The information about what's currently playing can be off a little.
+It's based on the times on the playlist prepared before the programs,
+but since all music is played by live announcers, the pieces may
+start and end a minute or two ahead or behind of the plan.
 
 ## Packaging the channel
 

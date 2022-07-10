@@ -43,7 +43,7 @@ sub updateScreenLoop()
 
         labels = {"timeLabel": mid(getNowLocal().ToISOString(), 12, 8) + " " + tzname()}
 
-        ' Skip past completed works, leaving slots[0] as the current work.
+        ' Skip past completed works, leaving slots[0] as the current or next work.
         while slots.Count() > 0 and slots[0].IsCompleted()
             previous = slots.Shift()
         end while
@@ -57,18 +57,28 @@ sub updateScreenLoop()
             called_get_new_slots = true
         end if
 
+        currentWork = invalid
+        nextWork = invalid
+
         if slots.Count() = 0 then
             labels["whatsPlayingLabel"] = "<message>Sorry, no information available.</message>"
         else
+            if slots[0].HasStarted() then
+                currentWork = slots[0]
+                if slots.Count() > 1 then nextWork = slots[1]
+            else
+                nextWork = slots[0]
+            end if
+
             mstext = ""
             if previous <> invalid then
                 mstext = formatWork("JUST PLAYED", previous) + Chr(10)
             endif
-            work = slots[0]
-            mstext = mstext + formatWork("NOW PLAYING", work) + Chr(10)
-            if slots.Count() > 1 then
-                work = slots[1]
-                mstext = mstext + formatWork("COMING UP AT " + work.FormatStartTimeLocal(), work)
+            if currentWork <> invalid then
+                mstext = mstext + formatWork("NOW PLAYING", currentWork) + Chr(10)
+            end if
+            if nextWork <> invalid then
+                mstext = mstext + formatWork("COMING UP AT " + nextWork.FormatStartTimeLocal(), nextWork)
             end if
 
             labels["whatsPlayingLabel"] = mstext

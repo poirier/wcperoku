@@ -7,7 +7,7 @@ Function EndTimeUTCFunction()  ' As roDateTime
 End Function
 
 Function HasStartedFunction() as boolean
-    return getNowUTC().AsSeconds() <= m.StartTimeUTC.AsSeconds()
+    return m.StartTimeUTC.AsSeconds() <= getNowUTC().AsSeconds()
 End Function
 
 Function FormatStartTimeLocalFunction() as string
