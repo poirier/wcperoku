@@ -1,16 +1,6 @@
 function Main() as Void
     port = CreateObject("roMessagePort")
 
-    devInfo = CreateObject("roDeviceInfo")
-    devInfo.SetMessagePort(port)
-    devInfo.EnableLinkStatusEvent(true)
-    devInfo.EnableInternetStatusEvent(true)
-    print "GetDisplaySize=";devInfo.GetDisplaySize()
-    print "GetVideoMode=";devInfo.GetVideoMode()
-    print "GetSupportedGraphicsResolutions=";devInfo.GetSupportedGraphicsResolutions()
-    print "GetUIResolution=";devInfo.GetUIResolution()
-
-
     screen = CreateObject("roSGScreen")
     ' <Component: roSGScreen> https://developer.roku.com/docs/references/brightscript/components/rosgscreen.md
     ' https://developer.roku.com/docs/references/brightscript/interfaces/ifsgscreen.md

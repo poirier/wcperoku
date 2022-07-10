@@ -19,3 +19,5 @@ splash_screen_hd=pkg:/images/1280x720_from_svg.png
 splash_screen_sd=pkg:/images/720x480_from_svg.png
 splash_min_time=0
 ui_resolutions=sd,hd,fhd
+
+bs_const=runTests=true

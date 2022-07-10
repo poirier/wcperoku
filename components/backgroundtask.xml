@@ -3,16 +3,25 @@
     <interface>
         <field id="labels" type="assocarray" />  <!-- output -->
     </interface>
+    <script type="text/brightscript" uri="pkg:/components/backgroundtask/playlist.brs" />
+    <script type="text/brightscript" uri="pkg:/components/backgroundtask/slots.brs" />
+    <script type="text/brightscript" uri="pkg:/components/backgroundtask/time.brs" />
+    <script type="text/brightscript" uri="pkg:/components/backgroundtask/tests.brs" />
 <script type = "text/brightscript" >
 <![CDATA[
 
 sub init()
+#if runTests
+    runTheTests()
+#endif
+
     self = m.top
     self.functionName = "updateScreenLoop"
     self.control = "RUN"
 end sub
 
-function formatWork(heading, work)
+
+function formatWork(heading, work) as string
     mstext = ""
     mstext = mstext + "<heading>" + heading + "</heading>" + Chr(10)
     if work.title <> invalid then mstext = mstext + "<title>" + work.title + "</title>" + Chr(10)
@@ -21,15 +30,18 @@ function formatWork(heading, work)
     return mstext
 end function
 
+
 sub updateScreenLoop()
     self = m.top
+    oneSecond = 1000  ' one second in ms
+    oneMinute = 60 * oneSecond
 
     slots = CreateObject("roArray", 0, true)
     previous = invalid
     while true
         called_get_new_slots = false
 
-        labels = {"timeLabel": mid(getNow().ToISOString(), 12, 8)}
+        labels = {"timeLabel": mid(getNowLocal().ToISOString(), 12, 8) + " " + tzname()}
 
         ' Skip past completed works, leaving slots[0] as the current work.
         while slots.Count() > 0 and slots[0].IsCompleted()
@@ -56,7 +68,7 @@ sub updateScreenLoop()
             mstext = mstext + formatWork("NOW PLAYING", work) + Chr(10)
             if slots.Count() > 1 then
                 work = slots[1]
-                mstext = mstext + formatWork("COMING UP AT " + work.FormatStartTime(), work)
+                mstext = mstext + formatWork("COMING UP AT " + work.FormatStartTimeLocal(), work)
             end if
 
             labels["whatsPlayingLabel"] = mstext
@@ -67,127 +79,13 @@ sub updateScreenLoop()
             ' We tried to get more data and failed somehow. Rather than
             ' hammering the server retrying every second, pause for a longer
             ' time before our next update.
-            sleep(60 * 1000)
+            sleep(oneMinute)
         else
             ' update the screen every second
-            sleep(1000)
+            sleep(oneSecond)
         end if
     end while
 end sub
-
-function GetNewSlots() as dynamic
-    ' Returns {"previous": invalid | Slot, "slots": Array of Slots}
-    ' array of slots might be 0-length, e.g. on errors
-    print "GetNewSlots..."
-    previous = invalid
-    slots = CreateObject("roArray", 0, true)
-
-    transfer = createObject("roUrlTransfer")
-    transfer.setUrl("https://theclassicalstation.org/mobile/WCPE_Playlist.XML")
-    transfer.SetCertificatesFile("common:/certs/ca-bundle.crt")
-    body = transfer.GetToString()
-    print "Got playlist xml"
-    xml = CreateObject("roXMLElement")
-    if not xml.Parse(body) then
-        print "PARSER ERROR!!!!!!!!!!!!!!!!!!"
-        return {"previous": invalid, "slots": slots}
-    end if
-    items = xml.GetNamedElements("Item") ' roXMLList
-    for each item in items
-        slot = NewSlot()
-        slot["composer"] = GetTextFromItem(item, "composer")
-        slot["title"] = GetTextFromItem(item, "title")
-        slot["performers"] = GetTextFromItem(item, "performers")
-        slot["startTime"] = parseProgramStartTime(GetTextFromItem(item, "startTime"))
-        slot["startTimeSeconds"] = parseProgramStartTime(GetTextFromItem(item, "startTime")).AsSeconds()
-        slot["duration"] = parseDuration(GetTextFromItem(item, "runTime"))
-        if slot.IsCompleted() then
-            previous = slot
-        else
-            slots.Push(slot)
-        end if
-    end for
-    print "There are ";slots.Count();" uncompleted slots"
-    return {"previous": previous, "slots": slots}
-end function
-
-Function EndTimeFunction()  ' As roDateTime
-    seconds = m.startTime.AsSeconds() + m.duration
-    time = CreateObject("roDateTime")
-    time.FromSeconds(seconds)
-    return time
-End Function
-
-Function HasStartedFunction()
-    now = getNow()
-    return now.AsSeconds() <= m.StartTime.AsSeconds()
-End Function
-
-Function FormatStartTimeFunction()
-    copiedTime = CreateObject("roDateTime")
-    copiedTime.FromSeconds(m.startTimeSeconds)
-
-    h = copiedTime.GetHours()
-    m = copiedTime.GetMinutes()
-    ms = m.ToStr()
-    if m < 10 then ms = "0" + ms
-    s = h.ToStr() + ":" + ms
-    return s
-end function
-
-Function IsCompletedFunction()
-    now = getNow()
-    return m.EndTime().AsSeconds() < now.AsSeconds()
-End Function
-
-Function NewSlot()
-    return {
-        EndTime: EndTimeFunction
-        IsCompleted: IsCompletedFunction
-        HasStarted: HasStartedFunction
-        FormatStartTime: FormatStartTimeFunction
-    }
-End function
-
-Function GetTextFromItem(item, name)
-    return item.GetNamedElements(name).GetHead().GetBody()
-End Function
-
-Function parseDuration(s)  ' int seconds
-    ' Parse hh:mm:ss or mm:ss and return a duration in seconds.
-    if Len(s) = 5 then
-        s = "00:" + s
-    end if
-    hours = Val(Mid(s, 1, 2), 10)
-    minutes = Val(Mid(s, 4, 2), 10)
-    seconds = Val(Mid(s, 7, 2), 10)
-    return hours * 3600 + minutes * 60 + seconds
-End Function
-
-Function parseProgramStartTime(s)  ' roDateTime
-    ' e.g. "07/05/2022T18:40:47"
-    '       000000000111111111
-    '       123456789012345678
-    monthString = Mid(s, 1, 2)
-    dayString = Mid(s, 4, 2)
-    yearString = Mid(s, 7, 4)
-    hourString = Mid(s, 12, 2)
-    minuteString = Mid(s, 15, 2)
-    secondString = Mid(s, 18, 2)
-    dateString = Substitute("{0}-{1}-{2}", yearString, monthString, dayString)
-    timeString = Substitute("{0}:{1}:{2}", hourString, minuteString, secondString)
-    isoString = Substitute("{0} {1}", dateString, timeString)
-    date = CreateObject("roDateTime")
-    date.FromISO8601String(isoString)
-    return date
-End Function
-
-function getNow()
-    dateTime = CreateObject("roDateTime")
-    dateTime.ToLocalTime()
-    return dateTime
-end function
-
 ]]>
 </script>
 
