@@ -57,7 +57,9 @@ function init() as Void
     m.stopped_manually = false
     self.ObserveField("portarray", "onPortArrayChange")
 
-    if CreateObject("roAppInfo").IsDev() then
+    m.is_dev = CreateObject("roAppInfo").IsDev()
+
+    if m.is_dev then
         ' We've been sideloaded, so this is a developer testing this.
         ' Change the color of the time display to make it visible, so we
         ' can easily see what time it is and tell if the background task
@@ -90,6 +92,10 @@ sub onLabelsChanged()
         m.top.findNode(name).text = labels[name]
         name = labels.Next()
     end while
+    if m.is_dev then
+        timeLabel = m.top.findNode("timeLabel")
+        timeLabel.text = timeLabel.text + " " + m.audio.state
+    end if
 end sub
 
 function onKeyEvent(key as String, press as Boolean) as Boolean

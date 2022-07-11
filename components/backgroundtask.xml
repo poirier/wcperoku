@@ -35,6 +35,7 @@ sub updateScreenLoop()
     self = m.top
     oneSecond = 1000  ' one second in ms
     oneMinute = 60 * oneSecond
+    is_dev = CreateObject("roAppInfo").IsDev()
 
     slots = CreateObject("roArray", 0, true)
     previous = invalid
@@ -75,7 +76,9 @@ sub updateScreenLoop()
                 mstext = formatWork("JUST PLAYED", previous) + Chr(10)
             endif
             if currentWork <> invalid then
-                mstext = mstext + formatWork("NOW PLAYING", currentWork) + Chr(10)
+                h = "NOW PLAYING"
+                if is_dev then h = h + " (since " + currentWork.FormatStartTimeLocal() + ")"
+                mstext = mstext + formatWork(h, currentWork) + Chr(10)
             end if
             if nextWork <> invalid then
                 mstext = mstext + formatWork("COMING UP AT " + nextWork.FormatStartTimeLocal(), nextWork)
