@@ -17,7 +17,7 @@
         <MultiStyleLabel
                 id="whatsPlayingLabel"
                 text=""
-                width="2160"
+                width="1300"
                 wrap="true"
                 translation="[100, 100]"/>
 
@@ -69,6 +69,7 @@ function init() as Void
 
     resolution = CreateObject("roDeviceInfo").GetUIResolution()["name"]  ' "SD", "HD", "FHD"
     self.FindNode("timeLabel").fontSize = {"SD": "15", "HD": "20", "FHD": "30"}[resolution]
+    self.FindNode("whatsPlayingLabel").width = {"SD": "500", "HD": "800", "FHD": "1300"}[resolution]
 
     setDrawingStyles(self.FindNode("whatsPlayingLabel"))
 
