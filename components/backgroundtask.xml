@@ -52,10 +52,13 @@ sub updateScreenLoop()
         ' Have we run out of data?
         if slots.Count() = 0 then
             ' no data - need more
-            result = GetNewSlots()
-            slots = result.slots
-            previous = result.previous
+            slots = GetNewSlots()
             called_get_new_slots = true
+
+            ' Skip past completed works, leaving slots[0] as the current or next work.
+            while slots.Count() > 0 and slots[0].IsCompleted()
+                previous = slots.Shift()
+            end while
         end if
 
         currentWork = invalid
