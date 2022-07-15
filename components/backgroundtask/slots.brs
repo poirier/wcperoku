@@ -1,5 +1,3 @@
-
-
 Function EndTimeUTCFunction()  ' As roDateTime
     time = CreateObject("roDateTime")
     time.FromSeconds(m.startTimeUTC.AsSeconds() + m.duration)

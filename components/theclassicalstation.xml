@@ -24,7 +24,7 @@
         <Timer
             id="bufferingTimer"
             repeat="false"
-            duration="10"/>
+            duration="5"/>
     </children>
 
 
