@@ -5,6 +5,6 @@ sub assert(b, s)
 end sub
 
 sub runTheTests()
-    testisEDT()
+    testisEasternDaylightSavingTime()
 end sub
 #endif

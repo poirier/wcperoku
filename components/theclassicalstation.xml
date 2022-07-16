@@ -5,13 +5,16 @@
         <Poster id="wcpePoster" loadDisplayMode="scaleToFit" width="500" height="380"
                 translation="[1350,50]" uri="pkg:/images/theclassicalstation_svg_540x405.png"/>
 
-        <!-- By default, the time display is the same color as the background, so it's not visible. -->
-        <!-- We'll change the color during initialization if the app was sideloaded, for debugging. -->
         <SimpleLabel
-                id="timeLabel" text = "" horizOrigin = "left" vertOrigin = "top" translation="[1350,400]"
-                fontUri="pkg:/fonts/Roboto_Mono/RobotoMono-Regular.ttf"
+                id="timeLabel"
+                text = ""
+                horizOrigin = "left"
+                vertOrigin = "top"
+                translation="[1350,400]"
+                fontUri="pkg:/font-subsets/RobotoMono-Regular-subset.ttf"
                 fontSize="30"
-                color="0x063350ff"/>
+                color="0xffffffcf"
+        />
         <!-- This is the nicely formatted display of what's played, playing, and to play next. -->
         <MultiStyleLabel
                 id="whatsPlayingLabel"
@@ -57,14 +60,6 @@ function init() as Void
     self.ObserveField("portarray", "onPortArrayChange")
 
     m.is_dev = CreateObject("roAppInfo").IsDev()
-
-    if m.is_dev then
-        ' We've been sideloaded, so this is a developer testing this.
-        ' Change the color of the time display to make it visible, so we
-        ' can easily see what time it is and tell if the background task
-        ' is updating things.
-        self.FindNode("timeLabel").color = "0xffffffcf"
-    end if
 
     resolution = CreateObject("roDeviceInfo").GetUIResolution()["name"]  ' "SD", "HD", "FHD"
     self.FindNode("timeLabel").fontSize = {"SD": "15", "HD": "20", "FHD": "30"}[resolution]

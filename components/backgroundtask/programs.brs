@@ -22,7 +22,7 @@ function current_program_name() as String
     'print "TYPE of self.programdata=";type(m.programdata)
     if data = invalid then return ""
 
-    now = CreateObject("roDateTime")
+    now = getNowInEasternTime()
     day_of_week = now.GetDayOfWeek().ToStr()  ' 0 = Sunday etc
     week_number = (1 + (now.GetDayofMonth() \ 7)).ToStr()  ' so 1 = first sunday, 2 = second, etc
 
@@ -33,18 +33,18 @@ function current_program_name() as String
             'print "DAY MATCHES"
             if (not programdata.DoesExist("weeks")) or (programdata.weeks.InStr(week_number) <> -1) then
                 start_minutes_past_midnight = h_colon_mm_as_minutes(programdata.starttime)
-                'print "WEEK MATCHES. CONSIDERING ";programdata;" start minutes=";start_minutes_past_midnight;" min past midnight=";minutes_past_midnight
+                'print "WEEK MATCHES. CONSIDERING ";programdata;"NOW in min past midnight=";minutes_past_midnight
                 if start_minutes_past_midnight <= minutes_past_midnight then
                     end_minutes_past_midnight = start_minutes_past_midnight + programdata.duration - 1
-                    'print "PAST START TIME. Ends at="end_minutes_past_midnight
+                    'print "PAST START TIME. starts at=";start_minutes_past_midnight
                     if minutes_past_midnight < end_minutes_past_midnight then
-                        'print "BEFORE END TIME"
+                        'print "BEFORE END TIME. Ends at="end_minutes_past_midnight
                         return programdata.title
                     else
-                        'print "Has already ended"
+                        'print "Has already ended. Ends at="end_minutes_past_midnight
                     end if
                 else
-                    'print "Has not started"
+                    'print "Has not started. starts at=";start_minutes_past_midnight
                 end if
             else
                 'print "WEEK does not match"

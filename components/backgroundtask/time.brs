@@ -11,15 +11,30 @@ function getNowUTC() as dynamic
     return CreateObject("roDateTime")
 end function
 
+function getNowInEasternTime() as dynamic
+    return convertUTCToEasternTime(getNowUTC())
+end function
+
 function getNowLocal() as dynamic
     dateTime = CreateObject("roDateTime")
     dateTime.ToLocalTime()
     return dateTime
 end function
 
+function convertUTCToEasternTime(datetimeUTC) as dynamic  ' roDateTime
+    ' If saving time, offset is 4 hours
+    savingTime = CreateObject("roDateTime")
+    savingTime.FromSeconds(datetimeUTC.AsSeconds() - 4 * 3600)
+    if isEasternDaylightSavingTime(savingTime) then return savingTime
+    ' If standard time, offset is 5 hours
+    standardTime = CreateObject("roDateTime")
+    standardTime.FromSeconds(datetimeUTC.AsSeconds() - 5 * 3600)
+    return standardTime
+end function
+
 function convertEasternTimeToUTC(datetimeEastern) as dynamic ' roDateTime
     oneHour = 3600  ' seconds
-    isItDaylightSavingTime = isEDT(datetimeEastern)
+    isItDaylightSavingTime = isEasternDaylightSavingTime(datetimeEastern)
     if isItDaylightSavingTime = invalid then
         offset = 4  ' punt - we might be wrong, but we won't blow up. This is the best we can do.
     else if isItDaylightSavingTime then
@@ -82,7 +97,7 @@ function dateOfFirstSundayInNovember(year) as integer
     return g.DateOfFirstSundayInNovember[year.ToStr()]
 end function
 
-function isEDT(datetime)  ' could be boolean, or invalid
+function isEasternDaylightSavingTime(datetime)  ' could be boolean, or invalid
     ' Return True if datetime is in DST in Eastern time zone
     ' Return False if it isn't
     ' Return invalid if we cannot tell
@@ -123,7 +138,7 @@ function isEDT(datetime)  ' could be boolean, or invalid
 end function
 
 #if runTests
-sub testisEDT()
+sub testisEasternDaylightSavingTime()
     utc_time = CreateObject("roDateTime")
     eastern_time = CreateObject("roDateTime")
     ' 2025-03-09 is the start of DST in 2025
@@ -131,7 +146,7 @@ sub testisEDT()
     ' Test the time just before that (UTC offset 5 hours)
     utc_time.fromISO8601String("2025-03-09 05:59:59")
     eastern_time.FromSeconds(utc_time.AsSeconds() - 5*3600)
-    assert(false = isEDT(eastern_time), eastern_time.ToISOString() + " should not be EDT")
+    assert(false = isEasternDaylightSavingTime(eastern_time), eastern_time.ToISOString() + " should not be EDT")
 
     ' test convertEasternTimeToUTC too
     assert(convertEasternTimeToUTC(eastern_time).AsSeconds() = utc_time.AsSeconds(), "eastern time should convert to 5:59 UTC")
@@ -139,7 +154,7 @@ sub testisEDT()
     ' now test the time just after that (UTC offset 4 hours)
     utc_time.fromISO8601String("2025-03-09 06:00:01")
     eastern_time.FromSeconds(utc_time.AsSeconds() - 4*3600)
-    assert(true = isEDT(eastern_time), eastern_time.ToISOString() + " should be EDT")
+    assert(true = isEasternDaylightSavingTime(eastern_time), eastern_time.ToISOString() + " should be EDT")
 
     ' 2025-11-02 is the end of DST in 2025
     ' we fall back from "2am EST" to "1am EDT"
@@ -149,21 +164,21 @@ sub testisEDT()
     ' First try just before that, definitely . UTC offset 4 hours.
     utc_time.fromISO8601String("2025-11-02 04:59:59")  ' 4:59 UTC
     eastern_time.FromSeconds(utc_time.AsSeconds() - 4*3600)  ' 0:59 Eastern
-    assert(true = isEDT(eastern_time), eastern_time.ToISOString() + " should be EDT")
+    assert(true = isEasternDaylightSavingTime(eastern_time), eastern_time.ToISOString() + " should be EDT")
 
     ' Now during those hours - we can't tell
     utc_time.fromISO8601String("2025-11-02 05:00:01")  ' 5:00:01 UTC - we haven't fallen back
     eastern_time.FromSeconds(utc_time.AsSeconds() - 4*3600)  ' 1:00:01 Eastern - offset is still 4 hours
-    assert(invalid = isEDT(eastern_time), eastern_time.ToISOString() + " should be unknown")
+    assert(invalid = isEasternDaylightSavingTime(eastern_time), eastern_time.ToISOString() + " should be unknown")
 
     utc_time.fromISO8601String("2025-11-02 06:00:01")  ' 6:00:01 UTC - we HAVE fallen back
     eastern_time.FromSeconds(utc_time.AsSeconds() - 5*3600)  ' 1:00:01 Eastern - offset is now 5 hours - so we get the SAME TIME
-    assert(invalid = isEDT(eastern_time), eastern_time.ToISOString() + " should be unknown")
+    assert(invalid = isEasternDaylightSavingTime(eastern_time), eastern_time.ToISOString() + " should be unknown")
 
     ' Now after those two hours.
     utc_time.fromISO8601String("2025-11-02 07:00:01")
     eastern_time.FromSeconds(utc_time.AsSeconds() - 5*3600)  ' 2:01 eastern
-    assert(false = isEDT(eastern_time), eastern_time.ToISOString() + " should not be EDT")
+    assert(false = isEasternDaylightSavingTime(eastern_time), eastern_time.ToISOString() + " should not be EDT")
 end sub
 
 #endif

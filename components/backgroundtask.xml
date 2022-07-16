@@ -44,7 +44,11 @@ sub updateScreenLoop()
     while true
         called_get_new_slots = false
 
-        labels = {"timeLabel": mid(getNowLocal().ToISOString(), 12, 8) + " " + tzname()}
+        if is_dev then
+            labels = {"timeLabel": mid(getNowLocal().ToISOString(), 12, 8) + " " + tzname()}
+        else
+            labels = {"timeLabel": ""}
+        end if
 
         ' Skip past completed works, leaving slots[0] as the current or next work.
         while slots.Count() > 0 and slots[0].IsCompleted()

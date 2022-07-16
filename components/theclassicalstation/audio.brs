@@ -30,8 +30,6 @@ sub bufferingTimerExpired()
 end sub
 
 sub onAudioStateChange()
-    self = m.top
-
     print "audio state change to ";m.audio.state
     bufferingTimer = m.bufferingTimer
     if m.audio.state = "buffering" and bufferingTimer.control <> "start" then
