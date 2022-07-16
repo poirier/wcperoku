@@ -22,29 +22,40 @@ sub setDrawingStyles(node)
     ' I haven't found an SD device to try this on, so just
     ' took a guess at sizes.
 
-    titlefontsize      = {"SD": "20", "HD": 30, "FHD": 48}[resolution]
-    headingfontsize    = {"SD": "16", "HD": 22, "FHD": 35}[resolution]
-    performersfontsize = {"SD": "15", "HD": 21, "FHD": 33}[resolution]
+    programfontsize    = {"SD": 24, "HD": 36, "FHD": 56}[resolution]  ' setting above 48-56 doesn't seem to make it appear any bigger
+    titlefontsize      = {"SD": 20, "HD": 30, "FHD": 48}[resolution]
+    headingfontsize    = {"SD": 16, "HD": 22, "FHD": 35}[resolution]
+    performersfontsize = {"SD": 15, "HD": 21, "FHD": 33}[resolution]
     composerfontsize   = titlefontsize
 
     node.drawingStyles = {
+        "program": {
+            ' "fontUri": "pkg:/fonts/SourceSerifPro/SourceSerifPro-Regular.ttf"
+            "fontUri": "pkg:/font-subsets/SourceSerifPro-Regular-subset.ttf"
+            "fontSize": programfontsize
+            "color": "#FFFFFFFF"
+        }
         "heading": {
-            "fontUri": "pkg:/fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf"
+            ' "fontUri": "pkg:/fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf"
+            "fontUri": "pkg:/font-subsets/SourceSansPro-Regular-subset.ttf"
             "fontSize": headingfontsize
             "color": "#76A2B7FF"
         }
         "title": {
-            "fontUri": "pkg:/fonts/SourceSerifPro/SourceSerifPro-Regular.ttf"
+            ' "fontUri": "pkg:/fonts/SourceSerifPro/SourceSerifPro-Regular.ttf"
+            "fontUri": "pkg:/font-subsets/SourceSerifPro-Regular-subset.ttf"
             "fontSize": titlefontsize
             "color": "#FFFFFFFF"
         }
         "performers":{
-            "fontUri": "pkg:/fonts/SourceSerifPro//SourceSerifPro-Italic.ttf"
+            ' "fontUri": "pkg:/fonts/SourceSerifPro/SourceSerifPro-Italic.ttf"
+            "fontUri": "pkg:/font-subsets/SourceSerifPro-Italic-subset.ttf"
             "fontSize": performersfontsize
             "color": "#FFFFFFFF"
         }
         "composer": {
-            "fontUri": "pkg:/fonts/SourceSerifPro//SourceSerifPro-Regular.ttf"
+            '"fontUri": "pkg:/fonts/SourceSerifPro/SourceSerifPro-Regular.ttf"
+            "fontUri": "pkg:/font-subsets/SourceSerifPro-Regular-subset.ttf"
             "fontSize": composerfontsize
             "color": "#FFFFFFFF"
         }

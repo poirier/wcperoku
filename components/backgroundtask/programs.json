@@ -1,0 +1,154 @@
+[
+  {
+    "title": "Sing for Joy",
+    "days": "0",
+    "starttime": "7:30",
+    "duration": 30,
+    "comment": "0 = Sunday, 1 = Monday, etc"
+  },
+  {
+    "title": "Great Sacred Music",
+    "days": "0",
+    "starttime": "8:00",
+    "duration": 240
+  },
+  {
+    "title": "Preview!",
+    "days": "0",
+    "starttime": "18:00",
+    "duration": 180
+  },
+  {
+    "title": "Wavelengths",
+    "days": "0",
+    "starttime": "21:00",
+    "duration": 60
+  },
+  {
+    "title": "Peaceful Reflections",
+    "days": "0",
+    "starttime": "22:00",
+    "duration": 120
+  },
+  {
+    "title": "Monday Night at the Symphony",
+    "days": "1",
+    "starttime": "20:00",
+    "duration": 120
+  },
+  {
+    "title": "My Life in Music",
+    "days": "1",
+    "weeks": "1",
+    "starttime": "19:00",
+    "duration": 60,
+    "comment": "1st Mondays"
+  },
+  {
+    "title": "My Life in Music",
+    "days": "0",
+    "weeks": "2",
+    "starttime": "19:00",
+    "duration": 60,
+    "comment": "2nd sundays"
+  },
+  {
+    "title": "Renaissance Fare",
+    "days": "1",
+    "weeks": "2",
+    "starttime": "19:00",
+    "duration": 60,
+    "comment": "2nd Mondays"
+  },
+  {
+    "title": "Renaissance Fare",
+    "days": "0",
+    "weeks": "3",
+    "starttime": "19:00",
+    "duration": 60,
+    "comment": "3rd Sundays"
+  },
+  {
+    "title": "Thursday Night Opera House",
+    "days": "4",
+    "starttime": "19:00",
+    "duration": 180
+  },
+  {
+    "title": "All Request Friday",
+    "days": "5",
+    "starttime": "09:00",
+    "duration": 780
+  },
+  {
+    "title": "Saturday Evening Request Program",
+    "days": "6",
+    "starttime": "18:00",
+    "duration": 360
+  },
+  {
+    "title": "Sleepers Awake",
+    "days": "0123456",
+    "starttime": "00:00",
+    "duration": 360
+  },
+  {
+    "title": "Rise & Shine!",
+    "days": "1234",
+    "starttime": "06:00",
+    "duration": 240
+  },
+  {
+    "title": "Classical Cafe",
+    "days": "1234",
+    "starttime": "10:00",
+    "duration": 180
+  },
+  {
+    "title": "As You Like It",
+    "days": "1234",
+    "starttime": "13:00",
+    "duration": 180
+  },
+  {
+    "title": "Allegro",
+    "days": "1234",
+    "starttime": "16:00",
+    "duration": 180
+  },
+  {
+    "title": "Music in the Night",
+    "days": "12345",
+    "starttime": "10:00",
+    "duration": 120
+  },
+  {
+    "title": "Weekend Classics",
+    "days": "6",
+    "starttime": "06:00",
+    "duration": 720
+  },
+  {
+    "title": "Weekend Classics",
+    "days": "0",
+    "starttime": "06:00",
+    "duration": 90,
+    "comment": "Sundays 6am-7:30am, then Sing for Joy"
+  },
+  {
+    "title": "Weekend Classics",
+    "days": "0",
+    "weeks": "23",
+    "starttime": "12:00",
+    "duration": 300,
+    "comment": "2nd & 3rd sundays have MLIM or RF at 17:00"
+  },
+  {
+    "title": "Weekend Classics",
+    "days": "0",
+    "weeks": "145",
+    "starttime": "12:00",
+    "duration": 360,
+    "comment": "non-2nd & 3rd sundays go to 18:00"
+  }
+]

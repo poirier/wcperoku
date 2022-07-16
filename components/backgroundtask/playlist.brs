@@ -57,22 +57,22 @@ End Function
 
 sub downloadURLandAddToSlots(url, slots)
     transfer = createObject("roUrlTransfer")
-    print "URL=";url
+    'print "URL=";url
     'transfer.setUrl("https://theclassicalstation.org/mobile/WCPE_Playlist.XML")
     transfer.setUrl(url)
     transfer.SetCertificatesFile("common:/certs/ca-bundle.crt")
     ' It'd be simpler to use GetToString(), but that loses the return status.
     returnCode = transfer.GetToFile("tmp:/playlist.xml")
-    print "Fetch returned " + returnCode.ToStr()
+    'print "Fetch returned " + returnCode.ToStr()
     if returnCode <> 200 then
         return
     end if
     body = ReadASCIIFile("tmp:/playlist.xml")  ' handles UTF-8 too, not just ASCII
     CreateObject("roFileSystem").Delete("tmp:/playlist.xml")
 
-    print "Length of XML is " + body.Len().ToStr()
+    'print "Length of XML is " + body.Len().ToStr()
 
-    print "Got playlist xml from " + url
+    'print "Got playlist xml from " + url
     xml = CreateObject("roXMLElement")
     if not xml.Parse(body) then
         print "PARSER ERROR!!!!!!!!!!!!!!!!!!"
@@ -96,12 +96,12 @@ end sub
 function GetNewSlots() as dynamic
     ' Returns {"previous": invalid | Slot, "slots": Array of Slots}
     ' array of slots might be 0-length, e.g. on errors
-    print "GetNewSlots..."
+    'print "GetNewSlots..."
     slots = CreateObject("roArray", 0, true)
     for each url in urlsToTryDownloading()
         downloadURLandAddToSlots(url, slots)
     end for
 
-    print "There are ";slots.Count();" slots"
+    'print "There are ";slots.Count();" slots"
     return slots
 end function

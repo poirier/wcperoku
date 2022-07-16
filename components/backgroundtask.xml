@@ -4,6 +4,7 @@
         <field id="labels" type="assocarray" />  <!-- output -->
     </interface>
     <script type="text/brightscript" uri="pkg:/components/backgroundtask/playlist.brs" />
+    <script type="text/brightscript" uri="pkg:/components/backgroundtask/programs.brs" />
     <script type="text/brightscript" uri="pkg:/components/backgroundtask/slots.brs" />
     <script type="text/brightscript" uri="pkg:/components/backgroundtask/time.brs" />
     <script type="text/brightscript" uri="pkg:/components/backgroundtask/tests.brs" />
@@ -16,6 +17,7 @@ sub init()
 #endif
 
     self = m.top
+    init_program_list()
     self.functionName = "updateScreenLoop"
     self.control = "RUN"
 end sub
@@ -75,8 +77,12 @@ sub updateScreenLoop()
             end if
 
             mstext = ""
+            program_title = current_program_name()
+            if program_title <> "" then
+                mstext = mstext + "<title>" + program_title + Chr(10) + "</title>"
+            end if
             if previous <> invalid then
-                mstext = formatWork("JUST PLAYED", previous) + Chr(10)
+                mstext = mstext + formatWork("JUST PLAYED", previous) + Chr(10)
             endif
             if currentWork <> invalid then
                 h = "NOW PLAYING"

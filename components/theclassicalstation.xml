@@ -8,18 +8,17 @@
         <!-- By default, the time display is the same color as the background, so it's not visible. -->
         <!-- We'll change the color during initialization if the app was sideloaded, for debugging. -->
         <SimpleLabel
-                id="timeLabel" text = "" horizOrigin = "left" vertOrigin = "top" translation="[100,50]"
+                id="timeLabel" text = "" horizOrigin = "left" vertOrigin = "top" translation="[1350,400]"
                 fontUri="pkg:/fonts/Roboto_Mono/RobotoMono-Regular.ttf"
                 fontSize="30"
                 color="0x063350ff"/>
-
         <!-- This is the nicely formatted display of what's played, playing, and to play next. -->
         <MultiStyleLabel
                 id="whatsPlayingLabel"
                 text=""
                 width="1300"
                 wrap="true"
-                translation="[100, 100]"/>
+                translation="[100, 50]"/>
 
         <Timer
             id="bufferingTimer"
