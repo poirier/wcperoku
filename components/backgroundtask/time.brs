@@ -98,6 +98,7 @@ function dateOfFirstSundayInNovember(year) as integer
 end function
 
 function isEasternDaylightSavingTime(datetime)  ' could be boolean, or invalid
+    ' Assuming datetime is in Eastern time
     ' Return True if datetime is in DST in Eastern time zone
     ' Return False if it isn't
     ' Return invalid if we cannot tell
@@ -114,7 +115,7 @@ function isEasternDaylightSavingTime(datetime)  ' could be boolean, or invalid
     second = datetime.GetSeconds()
     day = datetime.GetDayOfMonth()
 
-    if month > 3 and month < 11 then return true  ' Definitely in DST April-October
+    if month >= 4 and month <= 10 then return true  ' Definitely in DST April-October
     if month < 3 or month > 11 then return false ' Definitely not DST in Jan-Feb or December
     if month = 3 then
         dateOfChange = dateOfSecondSundayInMarch(year)
