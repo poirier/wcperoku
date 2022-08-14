@@ -20,13 +20,13 @@ Function FormatStartTimeLocalFunction() as string
     if userWants12HourTimeFormat() then
         if h = 0 then
             h = 12
-            ampm = " am"
+            ampm = " AM"
         else if h < 12 then
-            ampm = " am"
+            ampm = " AM"
         else if h = 12
-            ampm = " pm"
+            ampm = " PM"
         else
-            ampm = " pm"
+            ampm = " PM"
             h = h - 12
         end if
     end if
@@ -34,7 +34,7 @@ Function FormatStartTimeLocalFunction() as string
     ms = m.ToStr()
     if m < 10 then ms = "0" + ms
     s = h.ToStr() + ":" + ms
-    return s + ampm + " " + tzname()
+    return s + ampm + " (" + tzname() + ")"
 end function
 
 Function IsCompletedFunction() as boolean

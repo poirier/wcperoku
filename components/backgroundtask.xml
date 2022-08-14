@@ -25,13 +25,24 @@ end sub
 
 function formatWork(heading, work) as string
     mstext = ""
-    mstext = mstext + "<heading>" + heading + "</heading>" + Chr(10)
-    if work.title <> invalid then mstext = mstext + "<title>" + work.title + "</title>" + Chr(10)
-    if work.performers <> invalid then mstext = mstext + "<performers>" + work.performers + "</performers>" + Chr(10)
-    if work.composer <> invalid then mstext = mstext + "<composer>" + work.composer + "</composer>" + Chr(10)
+    mstext = mstext + "<heading>" + heading + "</heading> " + Chr(10)
+    if work.title <> invalid then mstext = mstext + "<title>" + work.title + "</title> " + Chr(10)
+    if work.performers <> invalid then mstext = mstext + "<performers>" + work.performers + "</performers> " + Chr(10)
+    if work.composer <> invalid then mstext = mstext + "<composer>" + work.composer + "</composer> " + Chr(10)
     return mstext
 end function
 
+
+sub addWorkToLabels(labels, prefix, heading, work)
+    if work = invalid then
+        work = {"title":"","performers":"","composer":""}
+        heading = ""
+    end if
+    labels[prefix + "Heading"] = heading
+    labels[prefix + "Title"] = work.title
+    labels[prefix + "Performers"] = work.performers
+    labels[prefix + "Composer"] = work.composer
+end sub
 
 sub updateScreenLoop()
     self = m.top
@@ -71,7 +82,7 @@ sub updateScreenLoop()
         nextWork = invalid
 
         if slots.Count() = 0 then
-            labels["whatsPlayingLabel"] = "<message>Sorry, no information available.</message>"
+            labels["programLabel"] = "Sorry, no information is available."
         else
             if slots[0].HasStarted() then
                 currentWork = slots[0]
@@ -80,24 +91,12 @@ sub updateScreenLoop()
                 nextWork = slots[0]
             end if
 
-            mstext = ""
-            program_title = current_program_name()
-            if program_title <> "" then
-                mstext = mstext + "<title>" + program_title + Chr(10) + "</title>"
-            end if
-            if previous <> invalid then
-                mstext = mstext + formatWork("JUST PLAYED", previous) + Chr(10)
-            endif
-            if currentWork <> invalid then
-                h = "NOW PLAYING"
-                if is_dev then h = h + " (since " + currentWork.FormatStartTimeLocal() + ")"
-                mstext = mstext + formatWork(h, currentWork) + Chr(10)
-            end if
-            if nextWork <> invalid then
-                mstext = mstext + formatWork("COMING UP AT " + nextWork.FormatStartTimeLocal(), nextWork)
-            end if
-
-            labels["whatsPlayingLabel"] = mstext
+            labels["programLabel"] = current_program_name()
+            addWorkToLabels(labels, "justPlayed", "JUST PLAYED", previous)
+            h = "NOW PLAYING"
+            if currentWork <> invalid and is_dev then h = h + " (since " + currentWork.FormatStartTimeLocal() + ")"
+            addWorkToLabels(labels, "nowPlaying", h, currentWork)
+            addWorkToLabels(labels, "comingUp", "COMING UP AT " + nextWork.FormatStartTimeLocal(), nextWork)
         end if
         self.labels = labels
 

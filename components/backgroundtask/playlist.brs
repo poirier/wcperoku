@@ -1,4 +1,6 @@
 Function GetTextFromItem(item, name) as string
+    ' item: roXMLElement
+    ' name: string
     s = item.GetNamedElements(name).GetHead().GetBody()
     if s = invalid then s = ""
     return s
@@ -8,25 +10,27 @@ function dateToURL(date)
     ' Return URL of the given date's playlist in XML
     s = date.ToISOString()
     ' "2021-03-25T18:53:03+0000"
-    y4 = Mid(s, 1, 4)
-    y2 = Mid(s, 3, 2)
-    m = Mid(s, 6, 2)
-    d = Mid(s, 9, 2)
-    ' https://theclassicalstation.org/wp-content/uploads/2022/07/07_13_22_PL.xml
+    y4 = Mid(s, 1, 4)  ' e.g. "2021"
+    y2 = Mid(s, 3, 2)  ' e.g. "21"
+    m = Mid(s, 6, 2)  ' e.g. "03"
+    d = Mid(s, 9, 2)  ' e.g. "25"
+    ' E.g. https://theclassicalstation.org/wp-content/uploads/2022/07/07_13_22_PL.xml
     return "https://theclassicalstation.org/wp-content/uploads/" + y4 + "/" + m + "/" + m + "_" + d + "_" + y2 + "_PL.xml"
 end function
 
 function urlsToTryDownloading()
+    ' return ["https://theclassicalstation.org/mobile/WCPE_Playlist.XML"]
+
     ' URLs for today's and tomorrow's playlists
-    now = CreateObject("roDateTime")
+    now = getNowInEasternTime()
     url1 = dateToURL(now)
     now.FromSeconds(now.AsSeconds() + 24 * 3600)
     url2 = dateToURL(now)
 
-    return [url1, url2]
+    return [url1, url2, "https://theclassicalstation.org/mobile/WCPE_Playlist.XML"]
 end function
 
-Function parseDuration(s)  ' int seconds
+Function parseDuration(s)  ' integer seconds
     ' Parse hh:mm:ss or mm:ss and return a duration in seconds.
     if Len(s) = 5 then
         s = "00:" + s
@@ -37,10 +41,13 @@ Function parseDuration(s)  ' int seconds
     return hours * 3600 + minutes * 60 + seconds
 End Function
 
-Function parseProgramStartTime(s)  ' roDateTime
+Function parseProgramStartTime(s)  ' roDateTime, in Eastern time
+    ' The start time in the playlist XML looks like the following:
     ' e.g. "07/05/2022T18:40:47"
     '       000000000111111111
     '       123456789012345678
+    ' We know it's always in Eastern time.
+    ' Parse it and return an roDateTime object that represents that time
     monthString = Mid(s, 1, 2)
     dayString = Mid(s, 4, 2)
     yearString = Mid(s, 7, 4)
@@ -57,14 +64,13 @@ End Function
 
 sub downloadURLandAddToSlots(url, slots)
     transfer = createObject("roUrlTransfer")
-    'print "URL=";url
-    'transfer.setUrl("https://theclassicalstation.org/mobile/WCPE_Playlist.XML")
+    print "Fetching URL=";url
     transfer.setUrl(url)
     transfer.SetCertificatesFile("common:/certs/ca-bundle.crt")
     ' It'd be simpler to use GetToString(), but that loses the return status.
     returnCode = transfer.GetToFile("tmp:/playlist.xml")
-    'print "Fetch returned " + returnCode.ToStr()
     if returnCode <> 200 then
+        print "Fetch returned " + returnCode.ToStr()
         return
     end if
     body = ReadASCIIFile("tmp:/playlist.xml")  ' handles UTF-8 too, not just ASCII

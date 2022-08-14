@@ -5,6 +5,23 @@
         <Poster id="wcpePoster" loadDisplayMode="scaleToFit" width="500" height="380"
                 translation="[1350,50]" uri="pkg:/images/theclassicalstation_svg_540x405.png"/>
 
+        <SimpleLabel id="programLabel" text=""/>
+
+        <SimpleLabel id="justPlayedHeading" text=""  />
+        <SimpleLabel id="justPlayedTitle" text=""  />
+        <SimpleLabel id="justPlayedPerformers" text=""  />
+        <SimpleLabel id="justPlayedComposer" text=""  />
+
+        <SimpleLabel id="nowPlayingHeading" text=""  />
+        <SimpleLabel id="nowPlayingTitle" text=""  />
+        <SimpleLabel id="nowPlayingPerformers" text=""  />
+        <SimpleLabel id="nowPlayingComposer" text=""  />
+
+        <SimpleLabel id="comingUpHeading" text=""  />
+        <SimpleLabel id="comingUpTitle" text=""  />
+        <SimpleLabel id="comingUpPerformers" text=""  />
+        <SimpleLabel id="comingUpComposer" text=""  />
+
         <SimpleLabel
                 id="timeLabel"
                 text = ""
@@ -16,12 +33,12 @@
                 color="0xffffffcf"
         />
         <!-- This is the nicely formatted display of what's played, playing, and to play next. -->
-        <MultiStyleLabel
+   <!--     <MultiStyleLabel
                 id="whatsPlayingLabel"
                 text=""
                 width="1300"
                 wrap="true"
-                translation="[100, 50]"/>
+                translation="[100, 50]"/> -->
 
         <Timer
             id="bufferingTimer"
@@ -63,7 +80,7 @@ function init() as Void
 
     resolution = CreateObject("roDeviceInfo").GetUIResolution()["name"]  ' "SD", "HD", "FHD"
     self.FindNode("timeLabel").fontSize = {"SD": "15", "HD": "20", "FHD": "30"}[resolution]
-    self.FindNode("whatsPlayingLabel").width = {"SD": "500", "HD": "800", "FHD": "1300"}[resolution]
+    'self.FindNode("whatsPlayingLabel").width = {"SD": "500", "HD": "800", "FHD": "1300"}[resolution]
 
     setDrawingStyles(self.FindNode("whatsPlayingLabel"))
 
@@ -84,7 +101,10 @@ sub onLabelsChanged()
     labels.Reset()
     name = labels.Next()
     while name <> invalid
-        m.top.findNode(name).text = labels[name]
+        node = m.top.findNode(name)
+        if node <> invalid then
+            node.text = labels[name]
+        end if
         name = labels.Next()
     end while
     if m.is_dev then
