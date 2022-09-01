@@ -2,57 +2,38 @@
 <component name="TheClassicalStation" extends="Scene">
     <children>
         <!-- Put the station banner image in the top right -->
-        <Poster id="wcpePoster" loadDisplayMode="scaleToFit" width="500" height="380"
-                translation="[1350,50]" uri="pkg:/images/theclassicalstation_svg_540x405.png"/>
+        <Poster id="wcpePoster" loadDisplayMode="scaleToFit"
+                uri="pkg:/images/theclassicalstation_svg_540x405.png"/>
 
-        <SimpleLabel id="programLabel" text=""/>
+        <LayoutGroup itemspacings="[10,20,10,10,20,20,10,10,20,20, 10]" inheritParentOpacity="false" translation="[50,40]">
+            <Label id="programLabel"/>
 
-        <SimpleLabel id="justPlayedHeading" text=""  />
-        <SimpleLabel id="justPlayedTitle" text=""  />
-        <SimpleLabel id="justPlayedPerformers" text=""  />
-        <SimpleLabel id="justPlayedComposer" text=""  />
+            <Label id="justPlayedHeading"/>
+            <Label id="justPlayedTitle"/>
+            <Label id="justPlayedPerformers"/>
+            <Label id="justPlayedComposer"/>
 
-        <SimpleLabel id="nowPlayingHeading" text=""  />
-        <SimpleLabel id="nowPlayingTitle" text=""  />
-        <SimpleLabel id="nowPlayingPerformers" text=""  />
-        <SimpleLabel id="nowPlayingComposer" text=""  />
+            <Label id="nowPlayingHeading"/>
+            <Label id="nowPlayingTitle"/>
+            <Label id="nowPlayingPerformers"/>
+            <Label id="nowPlayingComposer"/>
 
-        <SimpleLabel id="comingUpHeading" text=""  />
-        <SimpleLabel id="comingUpTitle" text=""  />
-        <SimpleLabel id="comingUpPerformers" text=""  />
-        <SimpleLabel id="comingUpComposer" text=""  />
+            <Label id="comingUpHeading"/>
+            <Label id="comingUpTitle"/>
+            <Label id="comingUpPerformers"/>
+            <Label id="comingUpComposer"/>
+        </LayoutGroup>
 
-        <SimpleLabel
-                id="timeLabel"
-                text = ""
-                horizOrigin = "left"
-                vertOrigin = "top"
-                translation="[1350,400]"
-                fontUri="pkg:/font-subsets/RobotoMono-Regular-subset.ttf"
-                fontSize="30"
-                color="0xffffffcf"
-        />
-        <!-- This is the nicely formatted display of what's played, playing, and to play next. -->
-   <!--     <MultiStyleLabel
-                id="whatsPlayingLabel"
-                text=""
-                width="1300"
-                wrap="true"
-                translation="[100, 50]"/> -->
+        <label id="website"/>
 
-        <Timer
-            id="bufferingTimer"
-            repeat="false"
-            duration="3"/>
+        <Timer id="bufferingTimer" repeat="false" duration="3"/>
     </children>
-
-
     <interface>
+        <!-- Main.brs will tell us which message port it is using by assigning to this field -->
         <field id="portarray" type="array" alwaysNotify="true"/>
     </interface>
     <script type="text/brightscript" uri="pkg:/components/theclassicalstation/audio.brs" />
     <script type="text/brightscript" uri="pkg:/components/theclassicalstation/screen.brs" />
-
     <script type="text/brightscript" >
 <![CDATA[
 function init() as Void
@@ -62,7 +43,14 @@ function init() as Void
     ' m: <Component: roAssociativeArray>
     ' m.global: <Component: roSGNode:Node>
 
-    scaleAndPositionPoster(self.findNode("wcpePoster"))
+    uires = CreateObject("roDeviceInfo").GetUIResolution()
+    self.findNode("wcpePoster").SetFields({
+        width: uires["width"]
+        height: uires["height"]
+        opacity: "0.05"
+    })
+
+    print("SCREEN: width=" + uires["width"].toStr() + ", height=" + uires["height"].toStr())
 
     self.SetFields({
         backgroundUri: ""  ' MUST set backgroundUri to "" explicitly, or background color does not take effect. !#@!$@#!$@
@@ -72,24 +60,26 @@ function init() as Void
     self.setFocus(true)
 
     m.audio = setupAudioNode(self)
-    m.backgroundTask = setupBackgroundTask(self)
+
+    m.backgroundTask = CreateObject("roSGNode", "BackgroundTask") ' <Component: roSGNode:BackgroundTask>
+    ' when the background tasks's "labels" field changes, call onLabelsChanged() in this component.
+    m.backgroundTask.ObserveField("labels", "onLabelsChanged")
+    self.appendChild(m.backgroundTask)
+
     m.stopped_manually = false
-    self.ObserveField("portarray", "onPortArrayChange")
 
-    m.is_dev = CreateObject("roAppInfo").IsDev()
+    ' Main.brs will tell us which message port it is using by assigning to this field
+    ' ' ' ' ' ' ' self.ObserveField("portarray", "onPortArrayChange")
 
-    resolution = CreateObject("roDeviceInfo").GetUIResolution()["name"]  ' "SD", "HD", "FHD"
-    self.FindNode("timeLabel").fontSize = {"SD": "15", "HD": "20", "FHD": "30"}[resolution]
-    'self.FindNode("whatsPlayingLabel").width = {"SD": "500", "HD": "800", "FHD": "1300"}[resolution]
-
-    setDrawingStyles(self.FindNode("whatsPlayingLabel"))
+    configureLabelFields()
 
     m.bufferingTimer = self.FindNode("bufferingTimer")
     m.bufferingTimer.ObserveField("fire", "bufferingTimerExpired")
 end function
 
-sub onPortArrayChange()
-    print "port array change"
+sub XXXonPortArrayChange()
+    ' Now we know which port Main is using, observe the audio state
+    ' and send a message to that port when the audio state changes.
     m.audio.observeField("state", m.top.portarray[0])
 end sub
 
@@ -98,6 +88,7 @@ sub onLabelsChanged()
     ' is an associative array, where each key is the name of a label
     ' and its value is the text to set that label to.
     labels = m.backgroundTask.labels
+    ' Reset, Next is a way to iterate over an AssociativeArray
     labels.Reset()
     name = labels.Next()
     while name <> invalid
@@ -107,10 +98,6 @@ sub onLabelsChanged()
         end if
         name = labels.Next()
     end while
-    if m.is_dev then
-        timeLabel = m.top.findNode("timeLabel")
-        timeLabel.text = timeLabel.text + " " + m.audio.state
-    end if
 end sub
 
 function onKeyEvent(key as String, press as Boolean) as Boolean
@@ -128,18 +115,6 @@ function onKeyEvent(key as String, press as Boolean) as Boolean
         end if
     end if
     return handled
-end function
-
-function setupBackgroundTask(self)
-    backgroundTask = CreateObject("roSGNode", "BackgroundTask")
-    ' <Component: roSGNode:BackgroundTask>
-
-    ' when the background tasks's "labels" field changes,
-    ' call onLabelsChanged() in this component.
-    backgroundTask.ObserveField("labels", "onLabelsChanged")
-
-    self.appendChild(backgroundTask)
-    return backgroundTask
 end function
 ]]>
 </script>

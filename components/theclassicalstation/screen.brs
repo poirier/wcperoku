@@ -1,22 +1,19 @@
-
-sub maybeSetLabelFontSizeAndFontAndColor(nodeName, size, font, color)
-    node = m.top.findNode(nodeName)
-    if node <> invalid then
-        node.fontUri = font
-        node.fontSize = size
-        node.color = color
-    end if
-end sub
-
-sub setDrawingStyles(node)
+sub configureLabelFields()
     devInfo = CreateObject("roDeviceInfo")
     resolution = devInfo.GetUIResolution()["name"]  ' "SD", "HD", "FHD"
 
-    ' Font sizes on the web page:
-    ' heading 14px
-    ' title 19px
-    ' performers 13px
-    ' composer 19px
+    ' FHD = 1920 x 1080
+    ' HD =  1280 x 720
+    ' SD =  720 x 480
+
+    uires = devInfo.GetUIResolution()
+    width = uires.width - 50
+
+    ' Font sizes on the web page (https://theclassicalstation.org):
+    '   heading 14px
+    '   title 19px
+    '   performers 13px
+    '   composer 19px
 
     ' by experimenting, on a FHD screen, a size of 48 looks good
     ' for the title and composer.
@@ -31,128 +28,75 @@ sub setDrawingStyles(node)
     ' I haven't found an SD device to try this on, so just
     ' took a guess at sizes.
 
-    programfontsize    = {"SD": 24, "HD": 36, "FHD": 48}[resolution]  ' setting above 48-56 doesn't seem to make it appear any bigger
-    titlefontsize      = {"SD": 20, "HD": 30, "FHD": 48}[resolution]
-    headingfontsize    = {"SD": 16, "HD": 22, "FHD": 35}[resolution]
-    performersfontsize = {"SD": 15, "HD": 21, "FHD": 33}[resolution]
-    composerfontsize   = titlefontsize
+    sans = "pkg:/font-subsets/SourceSansPro-Regular-subset.ttf"
+    serif = "pkg:/font-subsets/SourceSerifPro-Regular-subset.ttf"
+    serifItalic = "pkg:/font-subsets/SourceSerifPro-Italic-subset.ttf"
 
-    fonts = {
-        "ProgramLabel": "pkg:/font-subsets/SourceSerifPro-Regular-subset.ttf",
-        "Heading": "pkg:/font-subsets/SourceSansPro-Regular-subset.ttf",
-        "Title": "pkg:/font-subsets/SourceSerifPro-Regular-subset.ttf",
-        "Performers": "pkg:/font-subsets/SourceSerifPro-Italic-subset.ttf",
-        "Composer": "pkg:/font-subsets/SourceSerifPro-Regular-subset.ttf"
-    }
-
-    colors = {
-        "ProgramLabel": "#FFFFFFFF",
-        "Heading": "#76A2B7FF",
-        "Title": "#FFFFFFFF",
-        "Performers": "#FFFFFFFF",
-        "Composer": "#FFFFFFFF",
-    }
-
-    fontSizes = {
-        "Heading": headingfontsize,
-        "Title": titlefontsize,
-        "Performers": performersfontsize,
-        "Composer": composerfontsize,
-    }
-    lineHeights = CreateObject("roAssociativeArray")
-    for each item in fontSizes.Items()
-        lineHeights[item.key] = 1.5 * fontSizes[item.key]
-        if item.key = "Heading" then lineHeights[item.key] = 10 + lineHeights[item.key]
-    end for
-
-    maybeSetLabelFontSizeAndFontAndColor("programLabel", programfontsize, fonts["programLabel"], colors["programLabel"])
-    prefixes = ["justPlayed", "nowPlaying", "comingUp"]
-    for each prefix in prefixes
-        for each name in ["Heading", "Title", "Performers", "Composer"]
-            maybeSetLabelFontSizeAndFontAndColor(prefix + name, fontSizes[name], fonts[name], colors[name])
-        end for
-    end for
-
-    programLabel = m.top.findNode("programLabel")
-    programLabel.vertOrigin = "top"
-    programLabel.horizOrigin = "left"
-    programLabel.translation = "[100,50]"
-
-    y = 150
-    for each prefix in prefixes
-        for each name in ["Heading", "Title", "Performers", "Composer"]
-            node = m.top.findNode(prefix + name)
-            if node <> invalid then
-                node.horizOrigin = "left"
-                node.vertOrigin = "top"
-                node.translation = "[100," + y.toStr() + "]"
-                y = y + lineHeights[name]
-            end if
-        end for
-        y = y + 30
-    end for
-
-    if node <> invalid then
-        node.drawingStyles = {
-            "program": {
-                ' "fontUri": "pkg:/fonts/SourceSerifPro/SourceSerifPro-Regular.ttf"
-                "fontUri": "pkg:/font-subsets/SourceSerifPro-Regular-subset.ttf"
-                "fontSize": programfontsize
-                "color": "#FFFFFFFF"
-            }
-            "heading": {
-                ' "fontUri": "pkg:/fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf"
-                "fontUri": "pkg:/font-subsets/SourceSansPro-Regular-subset.ttf"
-                "fontSize": headingfontsize
-                "color": "#76A2B7FF"
-            }
-            "title": {
-                ' "fontUri": "pkg:/fonts/SourceSerifPro/SourceSerifPro-Regular.ttf"
-                "fontUri": "pkg:/font-subsets/SourceSerifPro-Regular-subset.ttf"
-                "fontSize": titlefontsize
-                "color": "#FFFFFFFF"
-            }
-            "performers":{
-                ' "fontUri": "pkg:/fonts/SourceSerifPro/SourceSerifPro-Italic.ttf"
-                "fontUri": "pkg:/font-subsets/SourceSerifPro-Italic-subset.ttf"
-                "fontSize": performersfontsize
-                "color": "#FFFFFFFF"
-            }
-            "composer": {
-                '"fontUri": "pkg:/fonts/SourceSerifPro/SourceSerifPro-Regular.ttf"
-                "fontUri": "pkg:/font-subsets/SourceSerifPro-Regular-subset.ttf"
-                "fontSize": composerfontsize
-                "color": "#FFFFFFFF"
-            }
-            "message": {
-                "fontUri": "font:LargeSystemFont"
-                "color":  "#FFFFFFFF"
-            }
-            "default": {
-                "fontUri": "font:LargeSystemFont"
-                "color": "#000000FF"
-            }
+    propsByFieldType = {
+        "Heading": {
+            "fontfields": {
+                "size": {"SD": 16, "HD": 22, "FHD": 35}[resolution],
+                "uri": sans,
+            },
+            "color": "#76A2B7FF"
+        },
+        "Title": {
+            "fontfields": {
+                "size": {"SD": 20, "HD": 30, "FHD": 48}[resolution],
+                "uri": serif,
+            },
+            "color": "#FFFFFFFF"
+        },
+        "Performers": {
+            "fontfields": {
+                "size": {"SD": 15, "HD": 21, "FHD": 33}[resolution],
+                "uri": serifItalic,
+            },
+            "color": "#FFFFFFFF"
+        },
+        "Composer": {
+            "fontfields": {
+                "size": {"SD": 20, "HD": 30, "FHD": 48}[resolution],
+                "uri": serif,
+            },
+            "color": "#FFFFFFFF"
+        },
+        "Program": {
+            "fontfields": {
+                "size": {"SD": 24, "HD": 36, "FHD": 48}[resolution],  ' setting above 48-56 doesn't seem to make it appear any bigger
+                "uri": serif,
+            },
+            "color": "#FFFFFFFF"
         }
-    end if
-end sub
-
-sub scaleAndPositionPoster(poster)
-    devInfo = CreateObject("roDeviceInfo")
-    uires = devInfo.GetUIResolution()
-    'resolution = uires["name"]  ' "SD", "HD", "FHD"
-    screen_width = uires["width"]
-    screen_height = uires["height"]
-
-    margin_w = screen_width / 32
-    margin_h = screen_height / 16
-
-    poster_w = screen_width / 4 ' e.g. 320
-    poster_x = screen_width - poster_w - margin_w
-    poster_y = margin_h
-    poster_fields = {
-        translation: "[" + poster_x.ToStr() + "," + poster_y.ToStr() + "]"
-        width: poster_w
-        height: screen_height / 4 ' e.g. 270
     }
-    poster.SetFields(poster_fields)
+
+    for each labelType in ["Heading", "Title", "Performers", "Composer"]
+        fontnode = CreateObject("roSGNode", "Font")
+        fontnode.SetFields(propsByFieldType[labelType]["fontfields"])
+        color = propsByFieldType[labelType]["color"]
+        for each labelTime in ["justPlayed", "nowPlaying", "comingUp"]
+            nodeName = labelTime + labelType
+            labelNode = m.top.FindNode(nodeName)
+            labelNode.setFields({
+                "font": fontnode,
+                "width": width,
+                "color": color,
+                "wrap": true
+            })
+        end for
+    end for
+
+    labelType = "Program"
+    fontnode = CreateObject("roSGNode", "Font")
+    fontnode.SetFields(propsByFieldType[labelType]["fontfields"])
+    color = propsByFieldType[labelType]["color"]
+    m.top.FindNode("ProgramLabel").SetFields({"font": fontnode, "width": width, "color": color, "wrap": true})
+
+    websiteNode = m.top.FindNode("website")
+    websiteNode.font = "font:SmallestSystemFont"
+    websiteNode.color = "#FFFFFFFF"
+    websiteNode.vertAlign = "bottom"
+    y = uires["height"] - 30
+    websiteNode.translation = "[50," + y.toStr() + "]"
+    websiteNode.text = "https://theclassicalstation.org"
 end sub

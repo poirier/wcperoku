@@ -15,6 +15,7 @@ debug:
 # Per https://developer.roku.com/docs/references/brightscript/components/rofontregistry.md
 # try to keep font files under 50K or so. This removes all glyphs except the basic ASCII chars
 # and the most common accented chars.  Edit charsused.txt to add any missing chars.
+# "pyftsubset" can be installed from "fonttools" package on Ubuntu.
 shrink_fonts:
 	pyftsubset fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf --text-file=charsused.txt --output-file=font-subsets/SourceSansPro-Regular-subset.ttf
 	pyftsubset fonts/SourceSerifPro/SourceSerifPro-Regular.ttf --text-file=charsused.txt --output-file=font-subsets/SourceSerifPro-Regular-subset.ttf

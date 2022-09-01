@@ -11,7 +11,7 @@ function Main() as Void
     ' <Component: roSGNode:TheClassicalStation>
     ' https://developer.roku.com/docs/references/brightscript/components/rosgnode.md
 
-    scene.portarray = [port]
+    ' scene.portarray = [port]
 
     screen.show()
 

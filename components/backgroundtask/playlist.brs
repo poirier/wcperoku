@@ -27,7 +27,7 @@ function urlsToTryDownloading()
     now.FromSeconds(now.AsSeconds() + 24 * 3600)
     url2 = dateToURL(now)
 
-    return [url1, url2, "https://theclassicalstation.org/mobile/WCPE_Playlist.XML"]
+    return [url1, "https://theclassicalstation.org/mobile/WCPE_Playlist.XML", url2]
 end function
 
 Function parseDuration(s)  ' integer seconds
@@ -62,7 +62,7 @@ Function parseProgramStartTime(s)  ' roDateTime, in Eastern time
     return date
 End Function
 
-sub downloadURLandAddToSlots(url, slots)
+function downloadURLandAddToSlots(url, slots)  ' returns TRUE if url downloaded and added to slots
     transfer = createObject("roUrlTransfer")
     print "Fetching URL=";url
     transfer.setUrl(url)
@@ -70,8 +70,8 @@ sub downloadURLandAddToSlots(url, slots)
     ' It'd be simpler to use GetToString(), but that loses the return status.
     returnCode = transfer.GetToFile("tmp:/playlist.xml")
     if returnCode <> 200 then
-        print "Fetch returned " + returnCode.ToStr()
-        return
+        print "Fetching " + url + " returned " + returnCode.ToStr()
+        return false
     end if
     body = ReadASCIIFile("tmp:/playlist.xml")  ' handles UTF-8 too, not just ASCII
     CreateObject("roFileSystem").Delete("tmp:/playlist.xml")
@@ -82,7 +82,7 @@ sub downloadURLandAddToSlots(url, slots)
     xml = CreateObject("roXMLElement")
     if not xml.Parse(body) then
         print "PARSER ERROR!!!!!!!!!!!!!!!!!!"
-        return
+        return false
     end if
     items = xml.GetNamedElements("Item") ' roXMLList
     for each item in items
@@ -97,7 +97,8 @@ sub downloadURLandAddToSlots(url, slots)
         slot["duration"] = parseDuration(GetTextFromItem(item, "runTime"))
         slots.Push(slot)
     end for
-end sub
+    return true
+end function
 
 function GetNewSlots() as dynamic
     ' Returns {"previous": invalid | Slot, "slots": Array of Slots}
@@ -105,8 +106,15 @@ function GetNewSlots() as dynamic
     'print "GetNewSlots..."
     slots = CreateObject("roArray", 0, true)
     for each url in urlsToTryDownloading()
-        downloadURLandAddToSlots(url, slots)
+        if downloadURLandAddToSlots(url, slots) then
+          exit for
+        end if
     end for
+
+    ' SortBy(fieldName as String, flags as String = "") as Void
+    ' Description
+    ' Performs a stable sort of an array of associative arrays by value of a common field.
+    slots.SortBy("startTimeSecondsUTC")
 
     'print "There are ";slots.Count();" slots"
     return slots
