@@ -2,7 +2,7 @@
  01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
  áéíóúäëïöüñâêîôû
 ÁÉÍÓÚÄËÏÖÜÑÂÊÎÔÛ
-ÀÃÅÇÈÌÒÙÝàãåæÆçèìòõùýÿ
+äÀÃÅÇÈÌÒÙÝàãåæÆçèìòõùýÿ
 šŠ
 “”
 □
