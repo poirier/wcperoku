@@ -77,11 +77,11 @@ Docs at https://developer.roku.com/docs/developer-program/publishing/packaging-c
 
 1. Upload the package file to developer.roku.com:
 
-    1. Go to your developer dashboard at https://developer.roku.com/dev/dashboard?
+    1. Go to your developer dashboard at https://developer.roku.com (click Dashboard)
 
     1. Under "My Channels", click the channel you're releasing.
 
-    1. Next to "Manage my Channels v", change the dropdown to "Package Upload".
+    1. **Next to** "Manage my Channels v", change the dropdown to "Package Upload".
 
     1. Enter the {major_version}.{minor_version}, click "Upload package" and select the package file previously downloaded from your Roku, check "I'm not a robot", and click "Submit".
 
@@ -97,4 +97,4 @@ Docs at https://developer.roku.com/docs/developer-program/publishing/packaging-c
 
     1. Next to "Manage my Channels v", change the dropdown to "Preview and Publish".
 
-    1. Scroll down and click "Publish".
+    1. Scroll down and click "Submit for publishing".

@@ -1,9 +1,9 @@
 # https://developer.roku.com/docs/developer-program/getting-started/architecture/channel-manifest.md
 ##   Channel Details
 title=The Classical Station WCPE
-major_version=1
-minor_version=20
-build_version=00031
+major_version=2
+minor_version=0
+build_version=00032
 
 ##   Channel Assets
 ###  Main Menu Icons / Channel Poster Artwork 
