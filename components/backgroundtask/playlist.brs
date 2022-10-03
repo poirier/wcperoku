@@ -8,14 +8,13 @@ End Function
 
 function dateToURL(date)
     ' Return URL of the given date's playlist in XML
+    ' Should look like https://theclassicalstation.org/MM_DD_YY_PL
     s = date.ToISOString()
     ' "2021-03-25T18:53:03+0000"
-    y4 = Mid(s, 1, 4)  ' e.g. "2021"
     y2 = Mid(s, 3, 2)  ' e.g. "21"
     m = Mid(s, 6, 2)  ' e.g. "03"
     d = Mid(s, 9, 2)  ' e.g. "25"
-    ' E.g. https://theclassicalstation.org/wp-content/uploads/2022/07/07_13_22_PL.xml
-    return "https://theclassicalstation.org/wp-content/uploads/" + y4 + "/" + m + "/" + m + "_" + d + "_" + y2 + "_PL.xml"
+    return "https://theclassicalstation.org/" + m + "_" + d + "_" + y2 + "_PL"
 end function
 
 function urlsToTryDownloading()
@@ -77,7 +76,6 @@ function downloadURLandAddToSlots(url, slots)  ' returns TRUE if url downloaded 
     CreateObject("roFileSystem").Delete("tmp:/playlist.xml")
 
     'print "Length of XML is " + body.Len().ToStr()
-
     'print "Got playlist xml from " + url
     xml = CreateObject("roXMLElement")
     if not xml.Parse(body) then
