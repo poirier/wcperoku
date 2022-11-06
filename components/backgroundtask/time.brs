@@ -130,7 +130,8 @@ function isEasternDaylightSavingTime(datetime)  ' could be boolean, or invalid
         if day < dateOfChange then return true
         if day > dateOfChange then return false
         if hour < 1 then return true  ' not 1am yet
-        if hour = 2 and (minute > 0 or second > 0) then return false ' got past 2am, dst is over
+        if hour = 2 and (minute > 0 or second > 0) then return false ' got past 2:00am, dst is over
+        if hour > 2 then return false ' got past 2:59am, dst is over
         ' We're in the 2 hours between 1am and 2am, but we don't know which hour, so
         ' we don't know if the clocks have turned back yet or not.
         return invalid
