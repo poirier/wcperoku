@@ -76,10 +76,15 @@ sub updateScreenLoop()
             end if
 
             labels["programLabel"] = current_program_name()
-            addWorkToLabels(labels, "justPlayed", "JUST PLAYED", previous)
-            h = "NOW PLAYING"
-            addWorkToLabels(labels, "nowPlaying", h, currentWork)
-            addWorkToLabels(labels, "comingUp", "COMING UP AT " + nextWork.FormatStartTimeLocal(), nextWork)
+            if previous <> invalid then
+                addWorkToLabels(labels, "justPlayed", "JUST PLAYED", previous)
+            end if
+            if currentWork <> invalid then
+                addWorkToLabels(labels, "nowPlaying", "NOW PLAYING", currentWork)
+            end if
+            if nextWork <> invalid then
+                addWorkToLabels(labels, "comingUp", "COMING UP AT " + nextWork.FormatStartTimeLocal(), nextWork)
+            end if
         end if
         self.labels = labels
 
