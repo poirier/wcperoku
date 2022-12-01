@@ -459,6 +459,18 @@ pkg: install
 		echo "$(APP_KEY_PASS)" > $(APP_KEY_PASS_TMP); \
 	fi
 
+	@echo "Converting package to CRAMFS"
+	PASSWD=`cat $(APP_KEY_PASS_TMP)`; \
+	PKG_TIME=`expr \`date +%s\` \* 1000`; \
+	HTTP_STATUS=`curl --user $(USERPASS) --digest --silent --show-error \
+	    -F "archive=" \
+		-F "mysubmit=Convert to cramfs" -F "app_name=$(APP_NAME)/$(APP_VERSION)" \
+		--output $(DEV_SERVER_TMP_FILE) \
+		--write-out "%{http_code}" \
+		http://$(ROKU_DEV_TARGET)/plugin_package`; \
+	$(CHECK_DEVICE_HTTP_STATUS)
+	cat $(DEV_SERVER_TMP_FILE)
+
 	@rm -f $(DEV_SERVER_TMP_FILE)
 	@PASSWD=`cat $(APP_KEY_PASS_TMP)`; \
 	PKG_TIME=`expr \`date +%s\` \* 1000`; \
