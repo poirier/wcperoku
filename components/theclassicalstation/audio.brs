@@ -6,11 +6,17 @@ function setupAudioNode(self) as Dynamic
     audiocontent.Title = "The Classical Station"
     audiocontent.TextOverlayUL = "Upper left"
     audiocontent.IgnoreStreamErrors = true
+    ' Failed experiment to get Icecast data with the stream.
+    ' (The stream has it, but assuming this was setting the request
+    ' header as expected, the Roku doesn't see the data.)
+    ' audiocontent.HttpHeaders = ["Icy-MetaData:1"]
 
     audio.content = audiocontent
     audio.loop = true
+    'audio.timedMetaDataSelectionKeys = ["*"]
 
     audio.observeField("state", "onAudioStateChange")
+    'audio.observeField("timedMetaData", "onTimedMetaData")
     self.appendChild(audio)
     audio.control = "play"
     return audio
@@ -28,6 +34,11 @@ sub bufferingTimerExpired()
     '    print "Audio state was ";m.audio.state;" so not doing anything."
     end if
 end sub
+
+'sub onTimedMetaData()
+'    print "on timed meta data"
+'    print m.audio.timedMetaData
+'end sub
 
 sub onAudioStateChange()
     'print "audio state change to ";m.audio.state
