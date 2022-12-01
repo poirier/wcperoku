@@ -93,10 +93,6 @@ sub configureLabelFields()
     m.top.FindNode("ProgramLabel").SetFields({"font": fontnode, "width": width, "color": color, "wrap": true})
 
     websiteNode = m.top.FindNode("website")
-    websiteNode.font = "font:SmallestSystemFont"
-    websiteNode.color = "#FFFFFFFF"
-    websiteNode.vertAlign = "bottom"
-    y = uires["height"] - 30
-    websiteNode.translation = "[50," + y.toStr() + "]"
-    websiteNode.text = "https://theclassicalstation.org"
+    websiteNode.height = uires.height
+    websiteNode.width = uires.width
 end sub

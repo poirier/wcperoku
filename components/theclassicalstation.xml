@@ -23,7 +23,13 @@
             <Label id="comingUpComposer"/>
         </LayoutGroup>
 
-        <label id="website"/>
+        <label id="website"
+               text="theclassicalstation.org"
+               font="font:SmallestSystemFont"
+               color="#FFFFFFFF"
+               vertAlign="bottom"
+               horizAlign="center"
+        />
 
         <Timer id="bufferingTimer" repeat="false" duration="3"/>
     </children>
