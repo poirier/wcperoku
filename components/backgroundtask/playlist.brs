@@ -63,7 +63,7 @@ End Function
 
 function downloadURLandAddToSlots(url, slots)  ' returns TRUE if url downloaded and added to slots
     transfer = createObject("roUrlTransfer")
-    print "Fetching URL=";url
+    'print "Fetching URL=";url
     transfer.setUrl(url)
     transfer.SetCertificatesFile("common:/certs/ca-bundle.crt")
     ' It'd be simpler to use GetToString(), but that loses the return status.

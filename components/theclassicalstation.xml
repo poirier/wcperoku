@@ -50,7 +50,7 @@ function init() as Void
         opacity: "0.05"
     })
 
-    print("SCREEN: width=" + uires["width"].toStr() + ", height=" + uires["height"].toStr())
+    'print("SCREEN: width=" + uires["width"].toStr() + ", height=" + uires["height"].toStr())
 
     self.SetFields({
         backgroundUri: ""  ' MUST set backgroundUri to "" explicitly, or background color does not take effect. !#@!$@#!$@

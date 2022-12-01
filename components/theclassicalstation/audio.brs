@@ -18,31 +18,31 @@ end function
 
 sub bufferingTimerExpired()
     ' still buffering
-    print "Buffering timer expired"
+    'print "Buffering timer expired"
     if m.audio.state = "buffering" then
         print "We were still (or again) buffering. Kick the audio player."
         m.audio.control = "stop"
         m.audio.control = "none"
         m.audio.control = "play"
-    else
-        print "Audio state was ";m.audio.state;" so not doing anything."
+    'else
+    '    print "Audio state was ";m.audio.state;" so not doing anything."
     end if
 end sub
 
 sub onAudioStateChange()
-    print "audio state change to ";m.audio.state
+    'print "audio state change to ";m.audio.state
     bufferingTimer = m.bufferingTimer
     if m.audio.state = "buffering" and bufferingTimer.control <> "start" then
         ' start a timer to limit how long we allow buffering to continue
         bufferingTimer.control = "start"
-        print "Started buffering timer"
+        'print "Started buffering timer"
         ' nothing else to do right now
         return
     end if
     if m.audio.state <> "buffering" and bufferingTimer.control = "start" then
         ' we're not buffering anymore, stop the timer
         bufferingTimer.control = "stop"
-        print "Stopped buffering timer"
+        'print "Stopped buffering timer"
     end if
     if (m.audio.state = "error") then
         print "Audio error: ";m.audio.errorMsg

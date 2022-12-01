@@ -23,7 +23,7 @@ function Main() as Void
         if msgType = "roSGScreenEvent" then
             if msg.isScreenClosed() then return
         else if msgType = "roDeviceInfoEvent" then
-            print "roDeviceInfoEvent=";msg.GetInfo()
+            'print "roDeviceInfoEvent=";msg.GetInfo()
         else
             print "Unhandled event type=";msgType;" msg=";msg
         end if
