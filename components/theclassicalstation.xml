@@ -63,20 +63,11 @@ function init() as Void
 
     m.stopped_manually = false
 
-    ' Main.brs will tell us which message port it is using by assigning to this field
-    ' ' ' ' ' ' ' self.ObserveField("portarray", "onPortArrayChange")
-
     configureLabelFields()
 
     m.bufferingTimer = self.FindNode("bufferingTimer")
     m.bufferingTimer.ObserveField("fire", "bufferingTimerExpired")
 end function
-
-sub XXXonPortArrayChange()
-    ' Now we know which port Main is using, observe the audio state
-    ' and send a message to that port when the audio state changes.
-    m.audio.observeField("state", m.top.portarray[0])
-end sub
 
 sub onLabelsChanged()
     ' Get the labels field from the background task. The value
