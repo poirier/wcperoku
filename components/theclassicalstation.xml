@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <component name="TheClassicalStation" extends="Scene">
     <children>
-        <!-- Put the station banner image in the top right -->
         <Poster id="wcpePoster" loadDisplayMode="scaleToFit"
                 uri="pkg:/images/theclassicalstation_svg_540x405.png"/>
 
@@ -28,10 +27,6 @@
 
         <Timer id="bufferingTimer" repeat="false" duration="3"/>
     </children>
-    <interface>
-        <!-- Main.brs will tell us which message port it is using by assigning to this field -->
-        <field id="portarray" type="array" alwaysNotify="true"/>
-    </interface>
     <script type="text/brightscript" uri="pkg:/components/theclassicalstation/audio.brs" />
     <script type="text/brightscript" uri="pkg:/components/theclassicalstation/screen.brs" />
     <script type="text/brightscript" >
