@@ -26,7 +26,7 @@ sub bufferingTimerExpired()
     ' still buffering
     'print "Buffering timer expired"
     if m.audio.state = "buffering" then
-        print "We were still (or again) buffering. Kick the audio player."
+        print "We were still (or again) buffering. Restart the audio player."
         m.audio.control = "stop"
         m.audio.control = "none"
         m.audio.control = "play"

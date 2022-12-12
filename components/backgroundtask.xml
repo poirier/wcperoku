@@ -75,16 +75,17 @@ sub updateScreenLoop()
                 nextWork = slots[0]
             end if
 
+            ' Always update the labels, so we can *clear* them if we have no data
+            ' rather than just leaving the old data displayed.
+            ' addWorkToLabels handles an invalid for the slot
             labels["programLabel"] = current_program_name()
-            if previous <> invalid then
-                addWorkToLabels(labels, "justPlayed", "JUST PLAYED", previous)
-            end if
-            if currentWork <> invalid then
-                addWorkToLabels(labels, "nowPlaying", "NOW PLAYING", currentWork)
-            end if
+            addWorkToLabels(labels, "justPlayed", "JUST PLAYED", previous)
+            addWorkToLabels(labels, "nowPlaying", "NOW PLAYING", currentWork)
+            label = "COMING UP"
             if nextWork <> invalid then
-                addWorkToLabels(labels, "comingUp", "COMING UP AT " + nextWork.FormatStartTimeLocal(), nextWork)
+                label = "COMING UP AT " + nextWork.FormatStartTimeLocal()
             end if
+            addWorkToLabels(labels, "comingUp", label, nextWork)
         end if
         self.labels = labels
 
