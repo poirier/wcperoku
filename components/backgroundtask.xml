@@ -24,13 +24,16 @@ end sub
 
 sub addWorkToLabels(labels, prefix, heading, work)
     if work = invalid then
-        work = {"title":"","performers":"","composer":""}
-        heading = ""
+        labels[prefix + "Heading"] = ""
+        labels[prefix + "Title"] = ""
+        labels[prefix + "Performers"] = ""
+        labels[prefix + "Composer"] = ""
+    else
+        labels[prefix + "Heading"] = work.FormatStartTimeLocal(false) + " — " + work.formatEndTimeLocal(true)
+        labels[prefix + "Title"] = work.title
+        labels[prefix + "Performers"] = work.performers
+        labels[prefix + "Composer"] = work.composer
     end if
-    labels[prefix + "Heading"] = heading
-    labels[prefix + "Title"] = work.title
-    labels[prefix + "Performers"] = work.performers
-    labels[prefix + "Composer"] = work.composer
 end sub
 
 sub updateScreenLoop()
@@ -83,7 +86,7 @@ sub updateScreenLoop()
             addWorkToLabels(labels, "nowPlaying", "NOW PLAYING", currentWork)
             label = "COMING UP"
             if nextWork <> invalid then
-                label = "COMING UP AT " + nextWork.FormatStartTimeLocal()
+                label = "COMING UP AT " + nextWork.FormatStartTimeLocal(true)
             end if
             addWorkToLabels(labels, "comingUp", label, nextWork)
         end if
