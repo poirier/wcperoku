@@ -17,6 +17,9 @@ sub init()
 #endif
 
     self = m.top
+
+    m.isDev = CreateObject("roAppInfo").IsDev()
+
     init_program_list()
     self.functionName = "updateScreenLoop"
     self.control = "RUN"
@@ -24,12 +27,23 @@ end sub
 
 sub addWorkToLabels(labels, prefix, heading, work)
     if work = invalid then
+        ' We don't have data for this one.
         labels[prefix + "Heading"] = ""
         labels[prefix + "Title"] = ""
         labels[prefix + "Performers"] = ""
         labels[prefix + "Composer"] = ""
-    else
+    else if m.isDev then
+        ' When sideloaded, show the exact start and end times of each work.
+        ' This is my personal preference, but I'm assuming other people would rather
+        ' not see it - also, the times the works actually play often vary by a few minutes,
+        ' so showing the exact times might just frustrate people.
         labels[prefix + "Heading"] = work.FormatStartTimeLocal(false) + " — " + work.formatEndTimeLocal(true)
+        labels[prefix + "Title"] = work.title
+        labels[prefix + "Performers"] = work.performers
+        labels[prefix + "Composer"] = work.composer
+    else
+        ' The general case. Show the same data as the web site.
+        labels[prefix + "Heading"] = heading
         labels[prefix + "Title"] = work.title
         labels[prefix + "Performers"] = work.performers
         labels[prefix + "Composer"] = work.composer

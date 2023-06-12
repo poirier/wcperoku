@@ -8,6 +8,12 @@ It's based on the times on the playlist prepared before the programs,
 but since all music is played by live announcers, the pieces may
 start and end a minute or two ahead or behind of the plan.
 
+## Roku Programming
+
+An overview to Roku Programming starts at https://developer.roku.com/docs/developer-program/getting-started/roku-dev-prog.md.
+
+Reference documentation for the Roku API is at https://developer.roku.com/docs/references/references-overview.md.
+
 ## Packaging the channel
 
 Docs at https://developer.roku.com/docs/developer-program/publishing/packaging-channels.md
@@ -55,7 +61,7 @@ Docs at https://developer.roku.com/docs/developer-program/publishing/packaging-c
 
     1. Install onto a Roku. (https://developer.roku.com/docs/developer-program/getting-started/developer-setup.md)
 
-    1. Go to http://{roku_ip_address}. E.g. http://192.168.0.5
+    1. Go to http://{roku_ip_address}. E.g. http://192.168.0.5. Login with your Roku's developer ID.
 
     1. Click the "Convert to cramfs" button
 
