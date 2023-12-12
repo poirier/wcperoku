@@ -36,31 +36,15 @@
     "weeks": "1",
     "starttime": "19:00",
     "duration": 60,
-    "comment": "1st Mondays"
+    "comment": "1st Mondays 7 pm"
   },
   {
     "title": "My Life in Music",
     "days": "0",
     "weeks": "2",
-    "starttime": "19:00",
+    "starttime": "17:00",
     "duration": 60,
-    "comment": "2nd sundays"
-  },
-  {
-    "title": "Renaissance Fare",
-    "days": "1",
-    "weeks": "2",
-    "starttime": "19:00",
-    "duration": 60,
-    "comment": "2nd Mondays"
-  },
-  {
-    "title": "Renaissance Fare",
-    "days": "0",
-    "weeks": "3",
-    "starttime": "19:00",
-    "duration": 60,
-    "comment": "3rd Sundays"
+    "comment": "2nd sundays 5pm"
   },
   {
     "title": "Thursday Night Opera House",
@@ -132,17 +116,17 @@
   {
     "title": "Weekend Classics",
     "days": "0",
-    "weeks": "23",
+    "weeks": "2",
     "starttime": "12:00",
     "duration": 300,
-    "comment": "2nd & 3rd sundays have MLIM or RF at 17:00"
+    "comment": "2nd sundays have MLIM at 17:00"
   },
   {
     "title": "Weekend Classics",
     "days": "0",
-    "weeks": "145",
+    "weeks": "1345",
     "starttime": "12:00",
     "duration": 360,
-    "comment": "non-2nd & 3rd sundays go to 18:00"
+    "comment": "non-2nd sundays go to 18:00"
   }
 ]
