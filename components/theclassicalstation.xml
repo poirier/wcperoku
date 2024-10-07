@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <component name="TheClassicalStation" extends="Scene">
     <children>
-        <Poster id="wcpePoster" loadDisplayMode="scaleToFit"
-                uri="pkg:/images/theclassicalstation_svg_540x405.png"/>
+<!--        <Poster id="wcpePoster" loadDisplayMode="scaleToFit"-->
+<!--                uri="pkg:/images/theclassicalstation_svg_540x405.png"/>-->
 
+        <!-- https://developer.roku.com/docs/references/scenegraph/layout-group-nodes/layoutgroup.md -->
         <LayoutGroup itemspacings="[10,20,10,10,20,20,10,10,20,20, 10]" inheritParentOpacity="false" translation="[50,40]">
-            <Label id="programLabel"/>
+            <Label id="programLabel" horizAlign="center"/>
 
-            <Label id="justPlayedHeading"/>
+            <Label id="justPlayedHeading" horizAlign="center"/>
             <Label id="justPlayedTitle"/>
             <Label id="justPlayedPerformers"/>
             <Label id="justPlayedComposer"/>
 
-            <Label id="nowPlayingHeading"/>
+            <Label id="nowPlayingHeading" horizAlign="center"/>
             <Label id="nowPlayingTitle"/>
             <Label id="nowPlayingPerformers"/>
             <Label id="nowPlayingComposer"/>
 
-            <Label id="comingUpHeading"/>
+            <Label id="comingUpHeading" horizAlign="center"/>
             <Label id="comingUpTitle"/>
             <Label id="comingUpPerformers"/>
             <Label id="comingUpComposer"/>
@@ -44,18 +45,15 @@ function init() as Void
     ' m: <Component: roAssociativeArray>
     ' m.global: <Component: roSGNode:Node>
 
-    uires = CreateObject("roDeviceInfo").GetUIResolution()
-    self.findNode("wcpePoster").SetFields({
-        width: uires["width"]
-        height: uires["height"]
-        opacity: "0.05"
-    })
+    'uires = CreateObject("roDeviceInfo").GetUIResolution()
+    'self.findNode("wcpePoster").SetFields({ width: uires["width"] height: uires["height"] opacity: "0.05" })
 
     'print("SCREEN: width=" + uires["width"].toStr() + ", height=" + uires["height"].toStr())
 
     self.SetFields({
         backgroundUri: ""  ' MUST set backgroundUri to "" explicitly, or background color does not take effect. !#@!$@#!$@
-        backgroundColor: "0x063350ff"
+        'backgroundColor: "0x063350ff"  ' wcpe blue
+        backgroundColor: "0x000000ff"  ' black
     })
 
     self.setFocus(true)
@@ -70,6 +68,13 @@ function init() as Void
     m.stopped_manually = false
 
     configureLabelFields()
+
+    m.top.FindNode("justPlayedTitle").setFields({"color": "0xffffff7f"})
+    m.top.FindNode("justPlayedPerformers").setFields({"color": "0xffffff7f"})
+    m.top.FindNode("justPlayedComposer").setFields({"color": "0xffffff7f"})
+    m.top.FindNode("comingUpTitle").setFields({"color": "0xffffff7f"})
+    m.top.FindNode("comingUpPerformers").setFields({"color": "0xffffff7f"})
+    m.top.FindNode("comingUpComposer").setFields({"color": "0xffffff7f"})
 
     m.bufferingTimer = self.FindNode("bufferingTimer")
     m.bufferingTimer.ObserveField("fire", "bufferingTimerExpired")

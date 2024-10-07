@@ -26,6 +26,7 @@ sub init()
 end sub
 
 sub addWorkToLabels(labels, prefix, heading, work)
+    ' work: a slot
     if work = invalid then
         ' We don't have data for this one.
         labels[prefix + "Heading"] = ""

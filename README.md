@@ -63,7 +63,7 @@ Docs at https://developer.roku.com/docs/developer-program/publishing/packaging-c
 
     1. Go to http://{roku_ip_address}. E.g. http://192.168.0.5. Login with your Roku's developer ID.
 
-    1. Click the "Convert to cramfs" button
+    1. Click the "Convert to squashfs" button. (I used to use "Convert to cramfs" but that seems to have gone away.)
 
     1. On the same page, click "Packager" in the top right
 
@@ -83,7 +83,7 @@ Docs at https://developer.roku.com/docs/developer-program/publishing/packaging-c
 
 1. Upload the package file to developer.roku.com:
 
-    1. Go to your developer dashboard at https://developer.roku.com (click Dashboard)
+    1. Go to your developer dashboard at https://developer.roku.com (click Dashboard) or go directly to https://developer.roku.com/dev/dashboard (unless Roku has reorganized their site again).
 
     1. Under "My Channels", click the channel you're releasing.
 
@@ -103,4 +103,4 @@ Docs at https://developer.roku.com/docs/developer-program/publishing/packaging-c
 
     1. Next to "Manage my Channels v", change the dropdown to "Preview and Publish".
 
-    1. Scroll down and click "Submit for publishing".
+    1. Scroll down and click "Schedule publishing".
