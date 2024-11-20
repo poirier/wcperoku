@@ -63,6 +63,12 @@ sub updateScreenLoop()
 
         labels = {}
 
+        if m.isDev then
+            ' For myself, put tiny clock in bottom right corner
+            now = getNowUTC()
+            labels["time"] = FormatSomeTimeLocalFunction(now.AsSeconds(), false)
+        end if
+
         ' Skip past completed works, leaving slots[0] as the current or next work.
         while slots.Count() > 0 and slots[0].IsCompleted()
             previous = slots.Shift()

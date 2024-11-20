@@ -1,4 +1,3 @@
-
 function setupAudioNode(self) as Dynamic
     audio = createObject("roSGNode", "Audio")
     audiocontent = createObject("RoSGNode", "ContentNode")
@@ -70,4 +69,8 @@ sub onAudioStateChange()
     '    ' Try to start it again.
     '    m.audio.control = "play"
     'end if
+    'print "m.audio = "
+    'for each item in m.audio.Items()
+    '    print item.key, item.value
+    'end for
 end sub
