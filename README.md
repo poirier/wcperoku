@@ -14,6 +14,28 @@ An overview to Roku Programming starts at https://developer.roku.com/docs/develo
 
 Reference documentation for the Roku API is at https://developer.roku.com/docs/references/references-overview.md.
 
+## About Roku development keys
+
+When you run "genkey" on a Roku device, it creates a new Roku
+development key, and displays a key ID and a password. The key
+itself stays on the Roku device. Just having the key ID and the
+password is *not* enough information to package channels using
+the same key on another device.
+
+When you *package* a channel on a device, the device's currently
+installed key is included in the package in such a way that
+another Roku device can extract it if you provide the password.
+Encryption hardware on the Roku devices is involved, so in theory,
+there's no other way to get at the key. Even then, it
+just gets the key onto the Roku device. You don't have it yourself.
+
+Because of this, you must not only securely save the key ID and
+password, but some channel packaged using the corresponding key.
+Then if you need to package your channel again using the same
+key as before and you don't have the original Roku (or it has
+a different key now), you can upload the old package and provide the password to the Roku's rekey utility and install the original
+key on the new Roku.
+
 ## Packaging the channel
 
 Docs at https://developer.roku.com/docs/developer-program/publishing/packaging-channels.md
@@ -48,6 +70,11 @@ Docs at https://developer.roku.com/docs/developer-program/publishing/packaging-c
 
 4. RECORD the password and DevID for later use.
 
+Note: if you want to package this channel using the same key
+as previously, you'll also need to *rekey* the Roku device
+before packaging.  But I think you have to have some key on
+the device before you can do that. (Maybe?)
+
 ### How to make a new release
 
 1. Edit manifest file:
@@ -63,13 +90,13 @@ Docs at https://developer.roku.com/docs/developer-program/publishing/packaging-c
 
     1. Go to http://{roku_ip_address}. E.g. http://192.168.0.5. Login with your Roku's developer ID.
 
-    1. Click the "Convert to squashfs" button. (I used to use "Convert to cramfs" but that seems to have gone away.)
+    1. OPTIONAL: Click the "Convert to squashfs" button. (I used to use "Convert to cramfs" but that seems to have gone away.)  That will make the downloaded package smaller, but breaks compatibility with the oldest Rokus. I have started not converting to squashfs, because I want the broadest device support.
 
     1. On the same page, click "Packager" in the top right
 
     1. In "App name", enter "The Classical Station/{major_version}.{minor_version}.{build_version}", e.g. "The Classical Station/1.10.22"
 
-    1. In the password field, enter the password recorded when the Roku was set up for packaging releases.
+    1. In the password field, enter the key password.
 
     1. Click "Package"
 
@@ -87,20 +114,18 @@ Docs at https://developer.roku.com/docs/developer-program/publishing/packaging-c
 
     1. Under "My Channels", click the channel you're releasing.
 
-    1. **Next to** "Manage my Channels v", change the dropdown to "Package Upload".
+    1. Under "Package and testing", click "Channel package".
 
-    1. Enter the {major_version}.{minor_version}, click "Upload package" and select the package file previously downloaded from your Roku, check "I'm not a robot", and click "Submit".
+    1. Under "Upload your .pkg or .zip file", click "Upload", and select the .pkg file you downloaded previously.  *You do not need to click Upload again, the file is already uploaded.*
 
-1. Run Static Analysis:
+    1. At the bottom right, click "Save and run Static Analysis"
 
-    1. Scroll down until you can click on "Static Analysis".
+    1. Wait until the page stops flashing and the "Run Analysis" button is active. *You do not need to click the Run Analysis button. The analysis has already happened.*
 
-    1. Click "Analyze". Wait 10-20 seconds. Click "Refresh". Repeat until the analysis is complete.
+    1. Toward the top of the page, look for the breadcrumb display something like "Public channels/The Classical Station (WCPE)/Static analysis" and click on your channel name.
 
-    1. Resolve any warnings or errors, then start the whole process over, until the analysis is clean.
+    1. If you don't see any red or warnings, click "Schedule publish" in the top right.
 
-1. Publish the new version:
+    1. Pick a date/time to publish the updated channel. The earliest time available might be a week or more in the future. That's just how Roku channel publishing seems to work.
 
-    1. Next to "Manage my Channels v", change the dropdown to "Preview and Publish".
-
-    1. Scroll down and click "Schedule publishing".
+    1. Follow the rest of the prompts to finish scheduling release of the updated channel.
