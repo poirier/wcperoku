@@ -31,7 +31,7 @@
                vertAlign="bottom"
                horizAlign="center"
         />
-        <label id="time" text="HH:MM" vertAlign="bottom" horizAlign="right" color="#76A2B7FF" />
+        <label id="time" text="" vertAlign="bottom" horizAlign="right" color="#76A2B7FF" />
         <Timer id="bufferingTimer" repeat="false" duration="3"/>
     </children>
     <script type="text/brightscript" uri="pkg:/components/theclassicalstation/audio.brs" />
