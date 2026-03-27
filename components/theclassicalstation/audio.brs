@@ -40,7 +40,10 @@ end sub
 'end sub
 
 sub onAudioStateChange()
-    'print "audio state change to ";m.audio.state
+    print "audio state change to ";m.audio.state
+    
+    m.top.FindNode("audio_state").setFields({"text": m.audio.state})
+    
     bufferingTimer = m.bufferingTimer
     if m.audio.state = "buffering" and bufferingTimer.control <> "start" then
         ' start a timer to limit how long we allow buffering to continue
