@@ -40,7 +40,7 @@ end sub
 'end sub
 
 sub onAudioStateChange()
-    print "audio state change to ";m.audio.state
+    'print "audio state change to ";m.audio.state
     
     m.top.FindNode("audio_state").setFields({"text": m.audio.state})
     

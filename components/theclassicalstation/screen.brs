@@ -1,5 +1,6 @@
 sub configureLabelFields()
-    m.isDev = CreateObject("roAppInfo").IsDev()
+    'm.isDev = CreateObject("roAppInfo").IsDev()
+    m.isDev = false
     devInfo = CreateObject("roDeviceInfo")
     resolution = devInfo.GetUIResolution()["name"]  ' "SD", "HD", "FHD"
 
@@ -115,7 +116,7 @@ sub configureLabelFields()
         fontnode = CreateObject("roSGNode", "Font")
         fontnode.SetFields(propsByFieldType["audio_state"]["fontfields"])
         x =  200
-        y = uires.height - propsByFieldType["audio_state"]["fontfields"]["size"]
+        y = uires.height - 40  'propsByFieldType["audio_state"]["fontfields"]["size"]
         translation = "[" + x.toStr() + "," + y.toStr() + "]"
         timeNode.setFields({"font": fontnode, "translation": translation})
 

@@ -8,13 +8,14 @@ End Function
 
 function dateToURL(date)
     ' Return URL of the given date's playlist in XML
-    ' Should look like https://theclassicalstation.org/MM_DD_YY_PL
+    ' Format: https://theclassicalstation.org/wp-content/uploads/2026/08/08_20_26_PL.xml
     s = date.ToISOString()
     ' "2021-03-25T18:53:03+0000"
+    y4 = Mid(s, 1, 4)  ' e.g. "2021"
     y2 = Mid(s, 3, 2)  ' e.g. "21"
     m = Mid(s, 6, 2)  ' e.g. "03"
     d = Mid(s, 9, 2)  ' e.g. "25"
-    return "https://theclassicalstation.org/" + m + "_" + d + "_" + y2 + "_PL"
+    return "https://theclassicalstation.org/wp-content/uploads/" + y4 + "/" + m + "/" + m + "_" + d + "_" + y2 + "_PL.xml"
 end function
 
 function urlsToTryDownloading()
@@ -68,8 +69,8 @@ function downloadURLandAddToSlots(url, slots)  ' returns TRUE if url downloaded 
     transfer.SetCertificatesFile("common:/certs/ca-bundle.crt")
     ' It'd be simpler to use GetToString(), but that loses the return status.
     returnCode = transfer.GetToFile("tmp:/playlist.xml")
-    if returnCode <> 200 then
-        print "Fetching " + url + " returned " + returnCode.ToStr()
+    'print "Fetching " + url + " returned " + returnCode.ToStr()
+    if returnCode <> 200 and returnCode <> 202 then
         return false
     end if
     body = ReadASCIIFile("tmp:/playlist.xml")  ' handles UTF-8 too, not just ASCII

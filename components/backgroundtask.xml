@@ -18,7 +18,8 @@ sub init()
 
     self = m.top
 
-    m.isDev = CreateObject("roAppInfo").IsDev()
+    'm.isDev = CreateObject("roAppInfo").IsDev()
+    m.isDev = false
 
     init_program_list()
     self.functionName = "updateScreenLoop"
