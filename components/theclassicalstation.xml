@@ -31,8 +31,6 @@
                vertAlign="bottom"
                horizAlign="center"
         />
-        <label id="time" text="" vertAlign="bottom" horizAlign="right" color="#76A2B7FF" />
-        <label id="audio_state" text="" vertAlign="bottom" horizAlign="left" color="0xffffff7f" />
 
         <Timer id="bufferingTimer" repeat="false" duration="3"/>
     </children>

@@ -56,13 +56,6 @@ sub configureLabelFields()
             },
             "color": "#76A2B7FF"
         },
-        "audio_state": {
-            "fontfields": {
-                "size": {"SD": 16, "HD": 22, "FHD": 35}[resolution],
-                "uri": sans,
-            },
-            "color": "#76A2B7FF"
-        },
         "Performers": {
             "fontfields": {
                 "size": {"SD": 15, "HD": 21, "FHD": 33}[resolution],
@@ -101,26 +94,6 @@ sub configureLabelFields()
             })
         end for
     end for
-
-    if m.isDev then
-        ' Make clock visible
-        timeNode = m.top.FindNode("time")
-        fontnode = CreateObject("roSGNode", "Font")
-        fontnode.SetFields(propsByFieldType["Time"]["fontfields"])
-        x = uires.width - 200
-        y = uires.height - propsByFieldType["Time"]["fontfields"]["size"]
-        translation = "[" + x.toStr() + "," + y.toStr() + "]"
-        timeNode.setFields({"font": fontnode, "translation": translation})
-
-        timeNode = m.top.FindNode("audio_state")
-        fontnode = CreateObject("roSGNode", "Font")
-        fontnode.SetFields(propsByFieldType["audio_state"]["fontfields"])
-        x =  200
-        y = uires.height - 40  'propsByFieldType["audio_state"]["fontfields"]["size"]
-        translation = "[" + x.toStr() + "," + y.toStr() + "]"
-        timeNode.setFields({"font": fontnode, "translation": translation})
-
-    end if
 
     labelType = "Program"
     fontnode = CreateObject("roSGNode", "Font")

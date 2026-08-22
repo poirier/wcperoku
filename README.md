@@ -112,9 +112,9 @@ the device before you can do that. (Maybe?)
 
     1. Go to your developer dashboard at https://developer.roku.com (click Dashboard) or go directly to https://developer.roku.com/dev/dashboard (unless Roku has reorganized their site again).
 
-    1. Under "My Channels", click the channel you're releasing.
+    1. Under "My apps", click the app you're releasing.
 
-    1. Under "Package and testing", click "Channel package".
+    1. Under "Package and testing", click "App package".
 
     1. Under "Upload your .pkg or .zip file", click "Upload", and select the .pkg file you downloaded previously.  *You do not need to click Upload again, the file is already uploaded.*
 
@@ -124,7 +124,7 @@ the device before you can do that. (Maybe?)
 
     1. Toward the top of the page, look for the breadcrumb display something like "Public channels/The Classical Station (WCPE)/Static analysis" and click on your channel name.
 
-    1. If you don't see any red or warnings, click "Schedule publish" in the top right.
+    1. If you don't see any red or warnings, click "Schedule publishing" in the top right.
 
     1. Pick a date/time to publish the updated channel. The earliest time available might be a week or more in the future. That's just how Roku channel publishing seems to work.
 
